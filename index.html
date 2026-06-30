@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Reader Matchmaker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Sunshiney&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lightgreen: '#C1D591',
+                        duckegg: '#B8D5DA',
+                        hydrangea: '#9EC0EB',
+                        strawberry: '#F1B8D9',
+                        basil: '#538376'
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        sunshiney: ['Sunshiney', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(184, 213, 218, 0.3); border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(83, 131, 118, 0.4); border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(83, 131, 118, 0.7); }
+        .modal-enter { transform: scale(1) !important; }
+    </style>
+</head>
+<body class="bg-white text-basil min-h-screen">
+    
+    <div id="app" class="w-full max-w-4xl mx-auto h-screen p-4 md:p-6 flex flex-col relative overflow-hidden"></div>
+
+    <div id="modal" class="fixed inset-0 bg-basil/80 z-50 hidden flex-col items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-lg relative shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto custom-scrollbar border-4 border-duckegg" id="modal-content">
+        </div>
+    </div>
+
+    <script>
+        let state = {
+            lang: 'en', 
+            name: '',
+            path: null,
+            targetDeviceId: null,
+            currentQuestionIndex: 0,
+            answers: {} 
+        };
+
+        const t = (obj) => obj[state.lang];
+
+        const ui = {
+            appName: { en: "InkMatch", id: "InkMatch" },
+            subtitle: { 
+                en: "Let's find your perfect <span class='font-sunshiney font-normal text-4xl sm:text-5xl px-1'>digital reading</span> companion!", 
+                id: "Temukan teman <span class='font-sunshiney font-normal text-4xl sm:text-5xl px-1'>baca digital</span> terbaikmu!" 
+            },
+            placeholder: { en: "Enter your name...", id: "Masukkan namamu..." },
+            whatToDo: { en: "What would you like to do?", id: "Apa yang ingin kamu lakukan?" },
+            findMode: { en: "Find the best e-reader for me", id: "Carikan e-reader terbaik untukku" },
+            checkMode: { en: "Check an e-reader I want", id: "Cek e-reader yang aku mau" },
+            needMode: { en: "Do I need an e-reader?", id: "Apakah aku butuh e-reader?" },
+            errorMsg: { en: "Please enter your name first!", id: "Tolong masukkan namamu dulu!" },
+            back: { en: "Back", id: "Kembali" },
+            startOver: { en: "Start Over", id: "Mulai dari Awal" },
+            tryAnother: { en: "Try Another One", id: "Coba yang Lain" },
+            close: { en: "Close", id: "Tutup" },
+            
+            checkTitle: { en: "Which e-reader are you eyeing?", id: "E-reader mana yang kamu incar?" },
+            checkSub: { en: "Select the device you want to buy, and we'll see if it matches your reading habits.", id: "Pilih perangkat yang ingin dibeli, dan kita lihat apakah cocok dengan kebiasaan bacamu." },
+            
+            matchTitle: { en: "Here is your perfect e-reader,", id: "Ini dia e-reader terbaikmu," },
+            bestMatch: { en: "BEST MATCH", id: "PALING COCOK" },
+            whyPicked: { en: "Why we picked it", id: "Alasan kami memilih ini" },
+            whySuits: { en: "Why this suits you", id: "Kenapa ini cocok untukmu" },
+            drawbacks: { en: "Potential drawbacks", id: "Potensi kekurangan" },
+            otherOptions: { en: "Other Great Options", id: "Pilihan Bagus Lainnya" },
+            viewDetails: { en: "View Details", id: "Lihat Detail" },
+
+            resultsTitle: { en: "Your Match Results,", id: "Hasil Kecocokanmu," },
+            resultsSub: { en: "Let's see how this device fits your lifestyle", id: "Mari kita lihat seberapa cocok perangkat ini denganmu" },
+            findResultsSub: { en: "Check out why we think this suits you", id: "Lihat alasan kenapa ini cocok untukmu" },
+            loveIt: { en: "What you'll love", id: "Yang akan kamu suka" },
+            botherIt: { en: "What might bother you", id: "Yang mungkin mengganggumu" },
+
+            needYesTitle: { en: "Yes! You definitely need an e-reader", id: "Ya! Kamu sepertinya butuh e-reader" },
+            needYesDesc: { en: "Based on your answers, an e-ink screen will save your eyes, keep you focused, and save physical space in your room.", id: "Berdasarkan jawabanmu, layar e-ink akan menyelamatkan matamu, membantumu fokus, dan menghemat ruang di kamarmu." },
+            needYesBtn: { en: "Find the best e-reader!", id: "Cari e-reader terbaik!" },
+            
+            needNoTitle: { en: "You might not need one right now", id: "Kamu mungkin belum butuh e-reader saat ini" },
+            needNoDesc: { en: "It seems like you are doing just fine with physical books or your current devices. But if you're curious, you can still check them out.", id: "Sepertinya kamu masih nyaman dengan buku fisik atau gadget saat ini. Tapi kalau penasaran, kamu tetap bisa cek opsi yang ada." },
+            needNoBtn: { en: "Check for e-readers", id: "Cek daftar e-reader" },
+            
+            tbrMessage: { en: "Also, you might want to finish your physical TBR first.", id: "Selain itu, mungkin kamu sebaiknya menyelesaikan timbunan buku fisikmu dulu." }
+        };
+
+        const ereaders = [
+            {
+                id: "d_0", name: "Kindle Paperwhite 11th Gen", image: "https://i.ebayimg.com/images/g/OlcAAOSw~DFn-TKl/s-l1200.jpg", priceRange: "Rp 2.300.000 - Rp 2.800.000",
+                specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "8GB, 16GB" }
+            },
+            {
+                id: "d_1", name: "Kindle Paperwhite 11th Gen Signature Edition", image: "https://i.ebayimg.com/images/g/OlcAAOSw~DFn-TKl/s-l1200.jpg", priceRange: "Rp 2.800.000 - Rp 3.500.000",
+                specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: true, stylus: false, storage: "32GB" }
+            },
+            {
+                id: "d_2", name: "Kindle Paperwhite 12th Gen", image: "https://www.wonderprice.co.uk/image/cache/wp/gp/Amazon/amazon-kindle-paperwhite-black-2-800x800.webp", priceRange: "Rp 2.700.000 - Rp 3.200.000",
+                specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "16GB" }
+            },
+            {
+                id: "d_3", name: "Kindle Paperwhite 12th Gen Signature Edition", image: "https://www.wonderprice.co.uk/image/cache/wp/gp/Amazon/amazon-kindle-paperwhite-black-2-800x800.webp", priceRange: "Rp 3.500.000 - Rp 4.200.000",
+                specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: true, stylus: false, storage: "32GB" }
+            },
+            {
+                id: "d_4", name: "Kindle Paperwhite 10th Gen", image: "https://m.media-amazon.com/images/I/616v826nywL._AC_UF1000,1000_QL80_.jpg", priceRange: "Rp 1.200.000 - Rp 1.800.000",
+                specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "compact", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "8GB, 32GB" }
+            },
+            {
+                id: "d_5", name: "Kindle Basic 11th Gen", image: "https://ecommerce.datablitz.com.ph/cdn/shop/files/sd4f86s5adf4sad_1024x.jpg?v=1756521504", priceRange: "Rp 1.800.000 - Rp 2.200.000",
+                specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: false, warmLight: false, size: "compact", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "16GB" }
+            },
+            {
+                id: "d_6", name: "Kindle Basic 10th Gen", image: "https://toyorgame.com.sg/cdn/shop/products/Kindle_1.jpg?v=1612498731", priceRange: "Rp 1.000.000 - Rp 1.500.000",
+                specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: false, warmLight: false, size: "compact", battery: "mid", libby: "multiple", wirelessCharging: false, stylus: false, storage: "4GB" }
+            },
+            {
+                id: "d_7", name: "Kindle Oasis", image: "https://m.media-amazon.com/images/I/61moEqqnwzL._AC_UF1000,1000_QL80_.jpg", priceRange: "Rp 3.500.000 - Rp 4.500.000",
+                specs: { ecosystem: "amazon", android: false, color: false, buttons: true, waterproof: true, warmLight: true, size: "bigger", battery: "short", libby: "multiple", wirelessCharging: false, stylus: false, storage: "8GB, 32GB" }
+            },
+            {
+                id: "d_8", name: "Kindle Colorsoft", image: "https://m.media-amazon.com/images/I/71DVdgdBZtL._AC_UF700,800_QL80_.jpg", priceRange: "Rp 4.500.000 - Rp 5.500.000",
+                specs: { ecosystem: "amazon", android: false, color: true, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "mid", libby: "multiple", wirelessCharging: false, stylus: false, storage: "16GB" }
+            },
+            {
+                id: "d_9", name: "Kindle Colorsoft Signature Edition", image: "https://m.media-amazon.com/images/I/71DVdgdBZtL._AC_UF700,800_QL80_.jpg", priceRange: "Rp 5.000.000 - Rp 6.000.000",
+                specs: { ecosystem: "amazon", android: false, color: true, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "short", libby: "multiple", wirelessCharging: true, stylus: false, storage: "32GB" }
+            },
+            {
+                id: "d_10", name: "Kindle Paperwhite Kids", image: "https://m.media-amazon.com/images/I/710ZbKFcC5L._AC_UF1000,1000_QL80_.jpg", priceRange: "Rp 2.000.000 - Rp 2.500.000",
+                specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "16GB" }
+            },
+            {
+                id: "d_11", name: "Kobo Clara BW", image: "https://m.media-amazon.com/images/I/61COzsfwaUL.jpg", priceRange: "Rp 2.200.000 - Rp 2.600.000",
+                specs: { ecosystem: "kobo", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "compact", battery: "mid", libby: "one", wirelessCharging: false, stylus: false, storage: "16GB" }
+            },
+            {
+                id: "d_12", name: "Kobo Clara Colour", image: "https://m.media-amazon.com/images/I/71WXIbM44gL.jpg", priceRange: "Rp 2.800.000 - Rp 3.200.000",
+                specs: { ecosystem: "kobo", android: false, color: true, buttons: false, waterproof: true, warmLight: true, size: "compact", battery: "short", libby: "one", wirelessCharging: false, stylus: false, storage: "16GB" }
+            },
+            {
+                id: "d_13", name: "Kobo Libra BW", image: "https://blog.the-ebook-reader.com/wp-content/uploads/2026/05/Kobo-Libra-2.jpg", priceRange: "Rp 3.200.000 - Rp 3.800.000",
+                specs: { ecosystem: "kobo", android: false, color: false, buttons: true, waterproof: true, warmLight: true, size: "bigger", battery: "mid", libby: "one", wirelessCharging: false, stylus: true, storage: "32GB" }
+            },
+            {
+                id: "d_14", name: "Kobo Libra Colour", image: "https://www.pbtech.co.nz/imgprod/T/A/TABKOB42802.jpg?h=510259536", priceRange: "Rp 3.800.000 - Rp 4.300.000",
+                specs: { ecosystem: "kobo", android: false, color: true, buttons: true, waterproof: true, warmLight: true, size: "bigger", battery: "short", libby: "one", wirelessCharging: false, stylus: true, storage: "32GB" }
+            },
+            {
+                id: "d_15", name: "BOOX Go 6", image: "https://euroshop.boox.com/cdn/shop/files/20260608-180657.jpg?v=1780913629", priceRange: "Rp 2.600.000 - Rp 3.000.000",
+                specs: { ecosystem: "android", android: true, color: false, buttons: false, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB" }
+            },
+            {
+                id: "d_16", name: "BOOX Go Color 7", image: "https://m.media-amazon.com/images/I/61eag2NcnAL.jpg", priceRange: "Rp 4.500.000 - Rp 5.200.000",
+                specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "64GB" }
+            },
+            {
+                id: "d_17", name: "BOOX Poke 5", image: "https://sc04.alicdn.com/kf/H285d0f1819c0469595b280c04eee28e85.jpg", priceRange: "Rp 2.600.000 - Rp 3.000.000",
+                specs: { ecosystem: "android", android: true, color: false, buttons: false, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB" }
+            },
+            {
+                id: "d_18", name: "BOOX Poke 4 Lite", image: "https://shop.boox.com/cdn/shop/products/1_73786023-d98b-47ba-821f-ee0b618bc69a.jpg?v=1665209995", priceRange: "Rp 1.800.000 - Rp 2.200.000",
+                specs: { ecosystem: "android", android: true, color: false, buttons: false, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "16GB" }
+            },
+            {
+                id: "d_19", name: "Meebook M6", image: "https://i.ebayimg.com/images/g/oOMAAOSwTe1mer0x/s-l1200.png", priceRange: "Rp 2.200.000 - Rp 2.600.000",
+                specs: { ecosystem: "android", android: true, color: false, buttons: false, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB" }
+            },
+            {
+                id: "d_20", name: "Meebook M7", image: "https://m.media-amazon.com/images/I/81SzVOZXmYL._AC_SL1500_.jpg", priceRange: "Rp 2.500.000 - Rp 3.000.000",
+                specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB" }
+            },
+            {
+                id: "d_21", name: "Bigme B751C", image: "https://m.media-amazon.com/images/I/61J3OwOa9vL.jpg", priceRange: "Rp 4.000.000 - Rp 4.800.000",
+                specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: true, storage: "64GB" }
+            },
+            {
+                id: "d_22", name: "Bigme B6 BW", image: "https://m.media-amazon.com/images/I/61RXFMyTzQL.jpg", priceRange: "Rp 3.500.000 - Rp 4.200.000",
+                specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB, 64GB" }
+            },
+            {
+                id: "d_23", name: "Bigme B6 Color", image: "https://m.media-amazon.com/images/I/618R7hBZ5bL.jpg", priceRange: "Rp 4.500.000 - Rp 5.200.000",
+                specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB, 64GB" }
+            }
+        ];
+
+        const needQuestions = [
+            { id: 'eye_strain', q: { en: 'Do your eyes easily get tired or dry when reading on a phone or tablet?', id: 'Apakah matamu mudah lelah atau kering saat membaca di HP/tablet?' }, options: [ { label: { en: 'Yes, quite often', id: 'Ya, lumayan sering' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
+            { id: 'distraction', q: { en: 'Do you often get distracted by notifications when you intended to read?', id: 'Apakah kamu sering terdistraksi notifikasi saat ingin membaca?' }, options: [ { label: { en: 'Yes, all the time', id: 'Ya, sering banget' }, value: 2 }, { label: { en: 'Occasionally', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
+            { id: 'storage', q: { en: 'How is your physical book storage situation at home?', id: 'Bagaimana kondisi ruang penyimpanan buku fisikmu di rumah?' }, options: [ { label: { en: 'Overflowing', id: 'Penuh banget' }, value: 2 }, { label: { en: 'Getting tight', id: 'Mulai penuh' }, value: 1 }, { label: { en: 'Plenty of space', id: 'Masih banyak ruang' }, value: 0 } ] },
+            { id: 'night_reading', q: { en: 'Do you like to read before bed but worry about the lamp waking others?', id: 'Apakah kamu suka baca sebelum tidur tapi khawatir lampu mengganggu orang lain?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'I sleep alone, but prefer dark', id: 'Tidur sendiri, tapi suka gelap' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
+            { id: 'travel', q: { en: 'Do you read while commuting or traveling?', id: 'Apakah kamu sering membaca saat bepergian/komuter?' }, options: [ { label: { en: 'Yes, very often', id: 'Ya, sering sekali' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'Rarely', id: 'Jarang' }, value: 0 } ] },
+            { id: 'weight', q: { en: 'Do you find thick physical books too heavy to hold for long?', id: 'Apakah buku fisik tebal terasa terlalu berat dipegang lama?' }, options: [ { label: { en: 'Yes, very heavy', id: 'Ya, sangat berat' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
+            { id: 'screen_time', q: { en: 'Do you already look at LCD screens all day for work/school?', id: 'Apakah kamu sudah melihat layar LCD seharian untuk kerja/sekolah?' }, options: [ { label: { en: 'Yes, 8+ hours', id: 'Ya, 8+ jam' }, value: 2 }, { label: { en: 'Moderate amount', id: 'Lumayan' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
+            { id: 'read_more', q: { en: 'Are you trying to build a habit of reading more?', id: 'Apakah kamu sedang mencoba membangun kebiasaan membaca lebih banyak?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'I already read a lot', id: 'Aku sudah sering baca' }, value: 1 }, { label: { en: 'Not really', id: 'Tidak juga' }, value: 0 } ] },
+            { id: 'multitasking', q: { en: 'Do you like looking up words in the dictionary instantly while reading?', id: 'Apakah kamu suka mencari arti kata di kamus secara instan saat baca?' }, options: [ { label: { en: 'Yes, often', id: 'Ya, sering' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
+            { id: 'lighting', q: { en: 'Do you often find yourself reading in poorly lit environments?', id: 'Apakah kamu sering membaca di tempat yang kurang cahaya?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No, always good light', id: 'Tidak, selalu terang' }, value: 0 } ] },
+            { id: 'instant_access', q: { en: 'Do you hate waiting for book deliveries?', id: 'Apakah kamu malas menunggu pengiriman buku fisik?' }, options: [ { label: { en: 'Yes, I want it instantly', id: 'Ya, aku mau instan' }, value: 2 }, { label: { en: 'I can wait', id: 'Aku bisa nunggu' }, value: 1 }, { label: { en: 'I enjoy bookstores', id: 'Aku suka ke toko buku' }, value: 0 } ] },
+            { id: 'privacy', q: { en: 'Do you read books with embarrassing covers in public?', id: 'Apakah kamu membaca buku dengan sampul memalukan di tempat umum?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
+            { id: 'font_size', q: { en: 'Do you ever wish you could make the text in a physical book larger?', id: 'Pernahkah kamu berharap bisa memperbesar teks di buku fisik?' }, options: [ { label: { en: 'Yes, frequently', id: 'Ya, sering' }, value: 2 }, { label: { en: 'Occasionally', id: 'Sesekali' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
+            { id: 'highlights', q: { en: 'Do you like highlighting quotes without ruining a physical book?', id: 'Apakah kamu suka menandai kutipan tanpa merusak buku fisik?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'I use sticky notes', id: 'Aku pakai sticky notes' }, value: 1 }, { label: { en: 'I do not highlight', id: 'Aku tidak menandai' }, value: 0 } ] },
+            { id: 'battery_anxiety', q: { en: 'Do you get anxious when your tablet/phone battery drops while reading?', id: 'Apakah kamu cemas kalau baterai HP/tablet turun saat membaca?' }, options: [ { label: { en: 'Yes, all the time', id: 'Ya, selalu' }, value: 2 }, { label: { en: 'A little bit', id: 'Sedikit' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] }
+        ];
+
+        const questions = [
+            { id: 'source', q: { en: 'Where do most of your books come from?', id: 'Dari mana kebanyakan sumber bukumu?' }, options: [ { label: { en: 'Amazon Kindle Store', id: 'Toko Amazon Kindle' }, value: 'amazon' }, { label: { en: 'Kobo Store', id: 'Toko Kobo' }, value: 'kobo' }, { label: { en: 'iPusnas / Gramedia Digital', id: 'iPusnas / Gramedia Digital' }, value: 'android' }, { label: { en: 'Libby / Overdrive', id: 'Libby / Overdrive' }, value: 'libby' }, { label: { en: 'EPUB/PDF files (Sideload)', id: 'File EPUB/PDF (Sideload)' }, value: 'sideload' }, { label: { en: 'Mixed sources', id: 'Campuran' }, value: 'mixed' } ] },
+            { id: 'content', q: { en: 'What will you mostly read?', id: 'Apa yang paling sering kamu baca?' }, options: [ { label: { en: 'Novels', id: 'Novel' }, value: 'text' }, { label: { en: 'Manga', id: 'Manga' }, value: 'manga' }, { label: { en: 'Comics', id: 'Komik' }, value: 'color' }, { label: { en: 'Textbooks', id: 'Buku Pelajaran' }, value: 'pdf' }, { label: { en: 'Mixed', id: 'Campuran' }, value: 'mixed' } ] },
+            { id: 'storage_count', q: { en: 'Around how many books do you usually keep?', id: 'Kira-kira berapa banyak buku yang biasanya kamu simpan?' }, options: [ { label: { en: 'Under 200', id: 'Di bawah 200' }, value: 'low' }, { label: { en: 'Hundreds', id: 'Ratusan' }, value: 'mid' }, { label: { en: 'Thousands', id: 'Ribuan' }, value: 'high' }, { label: { en: 'I never delete books', id: 'Aku tidak pernah menghapus buku' }, value: 'max' } ] },
+            { id: 'waterproof', q: { en: 'How important is waterproofing?', id: 'Seberapa penting fitur tahan air (waterproof)?' }, options: [ { label: { en: 'Essential', id: 'Sangat Penting' }, value: 'essential' }, { label: { en: 'Nice to have', id: 'Bagus kalau ada' }, value: 'nice' }, { label: { en: 'Do not care', id: 'Tidak peduli' }, value: 'none' } ] },
+            { id: 'size', q: { en: 'What size do you prefer?', id: 'Ukuran seperti apa yang kamu lebih suka?' }, options: [ { label: { en: 'Compact and lightweight (usually 6")', id: 'Ringkas dan ringan (biasanya 6 inci)' }, value: 'compact' }, { label: { en: 'A more comfortable, book-like size (6.8" - 7")', id: 'Lebih nyaman, mirip ukuran buku asli (6.8" - 7")' }, value: 'bigger' } ] },
+            { id: 'buttons', q: { en: 'Which sounds more comfortable?', id: 'Mana yang terdengar lebih nyaman?' }, options: [ { label: { en: 'Touchscreen only', id: 'Hanya layar sentuh' }, value: 'touch' }, { label: { en: 'Physical buttons', id: 'Tombol fisik' }, value: 'buttons' }, { label: { en: 'Either', id: 'Keduanya' }, value: 'either' } ] },
+            { id: 'library', q: { en: 'Do you borrow books from public libraries?', id: 'Apakah kamu meminjam buku dari perpustakaan publik?' }, options: [ { label: { en: 'Never', id: 'Tidak pernah' }, value: 'never' }, { label: { en: 'Occasionally', id: 'Kadang-kadang' }, value: 'one' }, { label: { en: 'Frequently', id: 'Sering' }, value: 'multiple' }, { label: { en: 'Multiple libraries', id: 'Banyak perpustakaan' }, value: 'multiple' } ] },
+            { id: 'notes', q: { en: 'Would you like to take handwritten notes?', id: 'Apakah kamu ingin membuat catatan tulisan tangan?' }, options: [ { label: { en: 'No I just want to read', id: 'Tidak, saya cuma mau baca' }, value: 'no' }, { label: { en: 'Yes I use it for notetaking', id: 'Ya, saya pakai untuk mencatat' }, value: 'yes' } ] },
+            { id: 'wireless', q: { en: 'Do you mainly use wireless charging?', id: 'Apakah kamu sering menggunakan pengisian daya nirkabel?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 'yes' }, { label: { en: 'No', id: 'Tidak' }, value: 'no' } ] },
+            { id: 'tracker', q: { en: 'Do you use a reading tracker app?', id: 'Apakah kamu menggunakan aplikasi pelacak bacaan?' }, options: [ { label: { en: 'Yes, I use Goodreads', id: 'Ya, saya pakai Goodreads' }, value: 'goodreads' }, { label: { en: 'Yes, I use Storygraph', id: 'Ya, saya pakai Storygraph' }, value: 'storygraph' }, { label: { en: 'Yes, I use other apps', id: 'Ya, saya pakai aplikasi lain' }, value: 'other' }, { label: { en: 'No', id: 'Tidak' }, value: 'no' } ] },
+            { id: 'budget', q: { en: 'What is your budget limit?', id: 'Berapa batas anggaranmu?' }, options: [ { label: { en: 'Under Rp 2.000.000', id: 'Di bawah Rp 2.000.000' }, value: 1 }, { label: { en: 'Rp 2.000.000 - Rp 3.500.000', id: 'Rp 2.000.000 - Rp 3.500.000' }, value: 2 }, { label: { en: 'Above Rp 3.500.000', id: 'Di atas Rp 3.500.000' }, value: 3 } ] }
+        ];
+
+        const appDiv = document.getElementById('app');
+
+        function render() {
+            const headerHtml = `
+                <div class="absolute top-4 left-4 right-4 z-10 flex justify-between items-center">
+                    <div class="flex items-center gap-2 text-basil font-bold text-base sm:text-lg cursor-pointer" onclick="resetApp()">
+                        <span class="font-sunshiney text-2xl sm:text-3xl pt-1">${t(ui.appName)}</span>
+                    </div>
+                    <div class="flex gap-2 text-sm font-semibold bg-white p-1 rounded-xl shadow-sm border-2 border-duckegg">
+                        <button onclick="setLang('en')" class="px-3 py-1 rounded-lg ${state.lang === 'en' ? 'bg-basil text-white' : 'text-basil hover:bg-duckegg/30'} transition-all">EN</button>
+                        <button onclick="setLang('id')" class="px-3 py-1 rounded-lg ${state.lang === 'id' ? 'bg-basil text-white' : 'text-basil hover:bg-duckegg/30'} transition-all">ID</button>
+                    </div>
+                </div>
+            `;
+
+            const footerHtml = `
+                <div class="absolute bottom-4 left-0 right-0 text-center z-10 flex flex-col items-center pointer-events-none">
+                    <span class="text-xs font-medium text-strawberry pointer-events-auto">made by @fictionalfira</span>
+                    
+                    <!-- Updated Link Container with Instagram logo left -->
+                    <a href="https://www.instagram.com/fictionalfira" target="_blank" class="flex items-center gap-1.5 text-xs text-strawberry hover:text-strawberry/80 transition-colors mt-1 pointer-events-auto">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                        </svg>
+                        <span>send a message!</span>
+                    </a>
+                </div>
+            `;
+
+            let contentHtml = '';
+            const currentQuestions = state.path === 'need' ? needQuestions : questions;
+
+            if (!state.path) {
+                contentHtml = getHomeHtml();
+            } else if (state.path === 'check' && !state.targetDeviceId) {
+                contentHtml = getDeviceSelectionHtml();
+            } else if (state.currentQuestionIndex < currentQuestions.length) {
+                contentHtml = getQuestionHtml(currentQuestions);
+            } else {
+                if (state.path === 'need') contentHtml = getNeedResultHtml();
+                else if (state.path === 'find') contentHtml = getFindResultHtml();
+                else contentHtml = getCheckResultHtml();
+            }
+
+            appDiv.innerHTML = headerHtml + `<div class="w-full h-full pb-14 pt-16">${contentHtml}</div>` + footerHtml;
+        }
+
+        function setLang(lang) {
+            state.lang = lang;
+            render();
+        }
+
+        function updateModeText(type) {
+            const textEl = document.getElementById('modeText');
+            if(!textEl) return;
+            if(type === 'find') textEl.innerText = t(ui.findMode);
+            else if(type === 'check') textEl.innerText = t(ui.checkMode);
+            else if(type === 'need') textEl.innerText = t(ui.needMode);
+            else textEl.innerText = t(ui.whatToDo);
+        }
+
+        function getHomeHtml() {
+            return `
+                <div class="fade-in flex flex-col items-center justify-center h-full space-y-6 text-center my-auto relative">
+                    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-basil leading-tight max-w-md mx-auto">
+                        ${t(ui.subtitle)}
+                    </h1>
+                    
+                    <input type="text" id="nameInput" value="${state.name}" placeholder="${t(ui.placeholder)}" 
+                        class="w-full max-w-xs sm:max-w-sm px-6 py-4 rounded-2xl border-2 border-duckegg focus:outline-none focus:ring-4 focus:ring-hydrangea/40 bg-white transition-all text-lg font-medium text-basil placeholder-basil/40 shadow-sm text-center">
+                    
+                    <div class="w-full max-w-lg mt-8">
+                        <p id="modeText" class="text-basil/70 font-bold mb-6 h-6 transition-all text-sm uppercase tracking-wider">${t(ui.whatToDo)}</p>
+                        
+                        <div class="flex flex-row justify-center gap-6 sm:gap-10">
+                            <div class="flex flex-col items-center gap-3 group cursor-pointer" onclick="startFlow('find')" onmouseenter="updateModeText('find')" onmouseleave="updateModeText('default')">
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-lightgreen text-basil flex items-center justify-center shadow-md group-hover:scale-110 transition-transform border-4 border-transparent group-hover:border-duckegg">
+                                    <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center gap-3 group cursor-pointer" onclick="startFlow('check')" onmouseenter="updateModeText('check')" onmouseleave="updateModeText('default')">
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-hydrangea text-basil flex items-center justify-center shadow-md group-hover:scale-110 transition-transform border-4 border-transparent group-hover:border-duckegg">
+                                    <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center gap-3 group cursor-pointer" onclick="startFlow('need')" onmouseenter="updateModeText('need')" onmouseleave="updateModeText('default')">
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-strawberry text-basil flex items-center justify-center shadow-md group-hover:scale-110 transition-transform border-4 border-transparent group-hover:border-duckegg">
+                                    <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p id="errorMsg" class="text-strawberry font-bold text-sm hidden bg-strawberry/20 px-4 py-2 rounded-xl text-basil absolute bottom-0">${t(ui.errorMsg)}</p>
+                </div>
+            `;
+        }
+
+        function startFlow(pathType) {
+            const nameInputEl = document.getElementById('nameInput');
+            if (nameInputEl) {
+                const nameInput = nameInputEl.value.trim();
+                if (!nameInput) {
+                    document.getElementById('errorMsg').classList.remove('hidden');
+                    return;
+                }
+                state.name = nameInput;
+            }
+            state.path = pathType;
+            state.currentQuestionIndex = 0;
+            state.answers = {};
+            state.targetDeviceId = null; 
+            render();
+        }
+
+        function getDeviceSelectionHtml() {
+            const generateDeviceGroup = (title, filterFn) => {
+                const filtered = ereaders.filter(filterFn);
+                if(filtered.length === 0) return '';
+                
+                let optionsHtml = filtered.map(device => `
+                    <div onclick="selectDevice('${device.id}')" class="cursor-pointer group relative bg-white border-2 border-duckegg rounded-3xl p-4 hover:shadow-xl transition-all duration-300 hover:border-hydrangea hover:-translate-y-1 flex flex-col h-full">
+                        <img src="${device.image}" alt="${device.name}" class="w-full h-32 object-contain rounded-xl mb-4 bg-gray-50 opacity-90 group-hover:opacity-100 transition-opacity p-2">
+                        <h3 class="font-bold text-basil text-center text-sm leading-tight flex-grow flex items-center justify-center">${device.name}</h3>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-10">
+                        <h3 class="text-xl font-bold text-basil mb-4 border-b-2 border-duckegg pb-2">${title}</h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                            ${optionsHtml}
+                        </div>
+                    </div>
+                `;
+            };
+
+            return `
+                <div class="fade-in flex flex-col h-full overflow-y-auto custom-scrollbar pr-2">
+                    <button onclick="resetApp()" class="self-start text-basil/60 hover:text-basil mb-6 flex items-center transition-colors font-medium shrink-0">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> ${t(ui.back)}
+                    </button>
+                    <div class="shrink-0 mb-6">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-basil mb-2">${t(ui.checkTitle)}</h2>
+                        <p class="text-basil/70">${t(ui.checkSub)}</p>
+                    </div>
+                    
+                    <div class="flex-grow pb-10">
+                        ${generateDeviceGroup("Amazon Kindle", d => d.specs.ecosystem === 'amazon')}
+                        ${generateDeviceGroup("Kobo", d => d.specs.ecosystem === 'kobo')}
+                        ${generateDeviceGroup("Android & Others", d => d.specs.ecosystem === 'android' || d.specs.ecosystem === 'other')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectDevice(id) {
+            state.targetDeviceId = id;
+            render();
+        }
+
+        function getQuestionHtml(currentQuestions) {
+            const q = currentQuestions[state.currentQuestionIndex];
+            const progress = ((state.currentQuestionIndex) / currentQuestions.length) * 100;
+
+            let optionsHtml = q.options.map((opt, index) => {
+                const valStr = typeof opt.value === 'string' ? `'${opt.value}'` : opt.value;
+                return `
+                <button onclick="answerQuestion(${valStr})" class="w-full text-left p-5 rounded-2xl border-2 border-duckegg hover:border-basil hover:bg-lightgreen/20 transition-all duration-200 group bg-white shadow-sm hover:shadow-md">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-duckegg/40 text-basil group-hover:bg-basil group-hover:text-white flex items-center justify-center font-bold mr-4 transition-colors shrink-0">
+                            ${String.fromCharCode(65 + index)}
+                        </div>
+                        <span class="text-base sm:text-lg text-basil font-medium">${t(opt.label)}</span>
+                    </div>
+                </button>
+            `}).join('');
+
+            return `
+                <div class="fade-in flex flex-col h-full flex-grow overflow-y-auto custom-scrollbar pr-2">
+                    <div class="flex justify-between items-center mb-6 shrink-0">
+                        <button onclick="goBackQuestion()" class="text-basil/60 hover:text-basil flex items-center transition-colors font-medium text-sm">
+                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> ${t(ui.back)}
+                        </button>
+                        <span class="text-sm font-bold text-basil/60 bg-duckegg/30 px-3 py-1 rounded-xl">
+                            ${state.currentQuestionIndex + 1} / ${currentQuestions.length}
+                        </span>
+                    </div>
+
+                    <div class="w-full bg-duckegg/40 rounded-full h-3 mb-10 overflow-hidden shrink-0">
+                        <div class="bg-hydrangea h-3 rounded-full transition-all duration-500" style="width: ${progress}%"></div>
+                    </div>
+                    
+                    <h2 class="text-2xl sm:text-3xl font-bold text-basil mb-8 leading-tight shrink-0">
+                        ${t(q.q)}
+                    </h2>
+                    
+                    <div class="space-y-4 flex-grow pb-10">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function answerQuestion(value) {
+            const currentQuestions = state.path === 'need' ? needQuestions : questions;
+            const currentQ = currentQuestions[state.currentQuestionIndex];
+            
+            state.answers[currentQ.id] = value;
+            state.currentQuestionIndex++;
+            render();
+        }
+
+        function goBackQuestion() {
+            if (state.currentQuestionIndex > 0) {
+                state.currentQuestionIndex--;
+                render();
+            } else {
+                if (state.path === 'check' && state.targetDeviceId) {
+                    state.targetDeviceId = null;
+                    render();
+                } else {
+                    resetApp();
+                }
+            }
+        }
+
+        function calculateMatches() {
+            let scores = ereaders.map(device => {
+                let score = 0; 
+                let maxPossible = 0;
+                let reasons = []; 
+                let drawbacks = []; 
+
+                const evaluate = (weight, condition, matchReason, failReason) => {
+                    maxPossible += weight;
+                    if (condition) {
+                        score += weight;
+                        if(matchReason) reasons.push(matchReason);
+                    } else {
+                        if(failReason) drawbacks.push(failReason);
+                    }
+                };
+
+                // 1. Source Ecosystem
+                if (state.answers.source === 'amazon') {
+                    evaluate(25, device.specs.ecosystem === 'amazon', "Seamless Amazon Store integration", "Not a Kindle, buying Amazon books is harder");
+                } else if (state.answers.source === 'kobo') {
+                    evaluate(25, device.specs.ecosystem === 'kobo', "Seamless Kobo Store integration", "Not a Kobo, buying Kobo books is harder");
+                } else if (state.answers.source === 'android') {
+                    evaluate(25, device.specs.android === true, "Full access to local Android apps like iPusnas", "Cannot install local Android reading apps natively");
+                } else if (state.answers.source === 'libby') {
+                    evaluate(15, device.specs.ecosystem === 'kobo' || device.specs.android, "Good Libby integration capabilities", "Amazon outside US doesn't support Libby easily");
+                } else if (state.answers.source === 'sideload') {
+                    evaluate(20, device.specs.ecosystem === 'android' || device.specs.ecosystem === 'kobo', "Easy to sideload and manage EPUBs", "Kindle requires 'Send to Kindle' conversion for EPUBs");
+                } else if (state.answers.source === 'mixed') {
+                    evaluate(25, device.specs.android === true, "Android allows access to multiple stores and formats", "Locked into a specific brand ecosystem");
+                }
+
+                // 2. Content / Color
+                if (state.answers.content === 'color') {
+                    evaluate(20, device.specs.color === true, "Color screen for comics and covers", "Black and white screen only");
+                } else if (state.answers.content === 'manga' || state.answers.content === 'pdf') {
+                    evaluate(15, device.specs.size === 'bigger', "Larger screen ideal for formatting", "Screen might be too small for complex layouts");
+                    if(state.answers.content === 'manga') evaluate(5, !device.specs.color, "Crisp B&W contrast for manga");
+                } else if (state.answers.content === 'text') {
+                    evaluate(10, !device.specs.color, "Sharper contrast with standard B&W screen", "Color screens can look slightly darker for pure text");
+                }
+
+                // 3. Size Preference
+                if (state.answers.size === 'compact') {
+                    evaluate(15, device.specs.size === 'compact', "Compact and lightweight design", "Larger and heavier than preferred");
+                } else if (state.answers.size === 'bigger') {
+                    evaluate(15, device.specs.size === 'bigger', "Comfortable, book-like reading area", "Smaller screen than requested");
+                }
+
+                // 4. Waterproofing
+                if (state.answers.waterproof === 'essential') {
+                    evaluate(15, device.specs.waterproof === true, "Fully waterproof for reading anywhere", "Not waterproof");
+                } else if (state.answers.waterproof === 'nice') {
+                    evaluate(5, device.specs.waterproof === true, "Has bonus waterproofing");
+                }
+
+                // 5. Buttons
+                if (state.answers.buttons === 'buttons') {
+                    evaluate(10, device.specs.buttons === true, "Has physical page-turn buttons", "Lacks physical buttons");
+                } else if (state.answers.buttons === 'touch') {
+                    evaluate(10, device.specs.buttons === false, "Streamlined touchscreen-only design");
+                }
+
+                // 6. Library/Libby
+                if (state.answers.library === 'one') {
+                    evaluate(15, device.specs.libby === 'one' || device.specs.android, "Supports your library needs", "Might not support Libby directly");
+                } else if (state.answers.library === 'multiple') {
+                    evaluate(15, device.specs.android || device.specs.ecosystem === 'amazon', "Can handle multiple library sources/cards", "Kobo natively only supports one active Libby card");
+                }
+
+                // 7. Stylus / Notes
+                if (state.answers.notes === 'yes') {
+                    evaluate(15, device.specs.stylus === true, "Supports stylus input for handwritten notes", "Cannot take handwritten notes");
+                }
+
+                // 8. Wireless Charging
+                if (state.answers.wireless === 'yes') {
+                    evaluate(5, device.specs.wirelessCharging === true, "Supports convenient wireless charging", "Requires a cable to charge");
+                }
+
+                // 9. Storage
+                const isHighStorage = device.specs.storage.includes('32GB') || device.specs.storage.includes('64GB') || device.specs.storage.includes('128GB');
+                if (state.answers.storage_count === 'high' || state.answers.storage_count === 'max') {
+                    evaluate(10, isHighStorage, "High storage capacity for large libraries", "Base storage might fill up quickly");
+                } else if (state.answers.storage_count === 'low') {
+                    evaluate(5, !isHighStorage, "Cost-effective storage size"); 
+                }
+
+                // 10. Budget
+                let budgetVal = 2; 
+                if(device.priceRange.includes('< Rp 2.000.000')) budgetVal = 1;
+                if(device.priceRange.includes('> Rp 3.500.000')) budgetVal = 3;
+                
+                if (state.answers.budget !== undefined) {
+                    if (budgetVal <= state.answers.budget) {
+                        score += 10; 
+                        maxPossible += 10;
+                        reasons.push("Fits within your budget");
+                    } else {
+                        score -= 20; 
+                        drawbacks.push("Exceeds your requested budget");
+                    }
+                }
+
+                let percentage = maxPossible > 0 ? Math.round((score / maxPossible) * 100) : 50;
+                percentage = Math.max(0, Math.min(100, percentage)); 
+
+                if(reasons.length === 0) reasons.push("Overall solid device");
+                if(drawbacks.length === 0) drawbacks.push("No major conflicts with your preferences");
+
+                reasons = [...new Set(reasons)].slice(0, 4);
+                drawbacks = [...new Set(drawbacks)].slice(0, 3);
+
+                return { ...device, score: percentage, matchReasons: reasons, matchDrawbacks: drawbacks };
+            });
+
+            return scores.sort((a, b) => b.score - a.score);
+        }
+
+        function getFindResultHtml() {
+            const ranked = calculateMatches();
+            const topPick = ranked[0];
+            const runnerUps = ranked.slice(1, 4);
+
+            return `
+                <div class="fade-in flex flex-col h-full overflow-y-auto custom-scrollbar pr-2 pb-6">
+                    <div class="text-center mb-8 shrink-0">
+                        <h2 class="text-3xl sm:text-4xl font-bold text-basil leading-tight mb-2">${t(ui.matchTitle)} ${state.name}!</h2>
+                        <p class="text-basil/70 mt-2">${t(ui.findResultsSub)}</p>
+                    </div>
+
+                    <div class="bg-duckegg/10 rounded-[2rem] p-6 md:p-8 shadow-xl border-2 border-duckegg mb-10 flex flex-col lg:flex-row items-center lg:items-start gap-8 relative shrink-0">
+                        <div class="absolute top-0 right-0 bg-basil text-white text-xs font-bold px-5 py-2.5 rounded-bl-3xl rounded-tr-[1.8rem] z-10 tracking-widest shadow-sm">${t(ui.bestMatch)}</div>
+                        
+                        <div class="w-full lg:w-1/3 shrink-0 flex flex-col items-center justify-center pt-6 lg:pt-0">
+                            <div class="relative">
+                                <img src="${topPick.image}" alt="${topPick.name}" class="w-56 h-72 sm:w-64 sm:h-80 object-contain rounded-xl p-2 sm:p-4 bg-white shadow-md border-4 border-white mx-auto">
+                                <div class="absolute -bottom-5 -right-5 bg-lightgreen border-4 border-white text-basil font-bold text-2xl rounded-full w-20 h-20 flex items-center justify-center shadow-lg">
+                                    ${topPick.score}%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-1 flex flex-col w-full min-w-0">
+                            <h3 class="text-3xl sm:text-4xl font-bold text-basil text-center sm:text-left mb-2 leading-tight">${topPick.name}</h3>
+                            <p class="text-basil/80 font-bold text-lg text-center sm:text-left mb-6 tracking-wide">${topPick.priceRange}</p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                                <div class="bg-lightgreen/10 p-5 rounded-2xl border border-lightgreen/30">
+                                    <h4 class="text-sm font-bold text-basil mb-3 flex items-center uppercase tracking-wider">
+                                        <svg class="w-4 h-4 mr-1.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 
+                                        ${t(ui.whySuits)}
+                                    </h4>
+                                    <ul class="text-sm text-basil space-y-2">
+                                        ${topPick.matchReasons.map(r => `<li class="flex items-start"><span class="mr-2 text-basil font-bold">•</span><span class="leading-tight">${r}</span></li>`).join('')}
+                                    </ul>
+                                </div>
+                                <div class="bg-strawberry/10 p-5 rounded-2xl border border-strawberry/30">
+                                    <h4 class="text-sm font-bold text-basil mb-3 flex items-center uppercase tracking-wider">
+                                        <svg class="w-4 h-4 mr-1.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> 
+                                        ${t(ui.drawbacks)}
+                                    </h4>
+                                    <ul class="text-sm text-basil space-y-2">
+                                        ${topPick.matchDrawbacks.map(c => `<li class="flex items-start"><span class="mr-2 text-strawberry font-bold">•</span><span class="leading-tight">${c}</span></li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-basil mb-5 text-center sm:text-left shrink-0">${t(ui.otherOptions)}</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 shrink-0">
+                        ${runnerUps.map(device => `
+                            <div class="bg-white rounded-3xl p-5 border-2 border-duckegg flex flex-col items-center text-center shadow-sm hover:shadow-md transition-all relative overflow-hidden group">
+                                <div class="absolute top-0 right-0 bg-hydrangea text-white text-base font-bold px-4 py-1.5 rounded-bl-2xl z-10 shadow-sm">${device.score}%</div>
+                                <img src="${device.image}" alt="${device.name}" class="w-20 h-24 object-contain rounded-xl mb-4 bg-gray-50 p-1 group-hover:scale-105 transition-transform">
+                                <h4 class="font-bold text-basil text-sm mb-1 leading-tight h-10 flex items-center">${device.name}</h4>
+                                <button onclick="openModal('${device.id}')" class="mt-4 text-xs font-bold text-basil bg-duckegg/40 hover:bg-duckegg px-4 py-2 rounded-xl transition-colors w-full">View Details</button>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <button onclick="resetApp()" class="mt-12 mx-auto bg-basil hover:bg-basil/90 text-white font-bold py-4 px-10 rounded-2xl transition-colors shadow-md shrink-0">
+                        ${t(ui.startOver)}
+                    </button>
+                </div>
+            `;
+        }
+
+        function getCheckResultHtml() {
+            const ranked = calculateMatches();
+            const device = ranked.find(d => d.id === state.targetDeviceId);
+            
+            const likes = device.matchReasons.length > 0 ? device.matchReasons : [state.lang === 'en' ? "Fits your basic criteria" : "Sesuai kriteria dasarmu"];
+            const dislikes = device.matchDrawbacks.length > 0 ? device.matchDrawbacks : [state.lang === 'en' ? "No major conflicts found" : "Tidak ada konflik besar"];
+            const score = device.score;
+            
+            let scoreColor = score >= 80 ? 'bg-lightgreen' : score >= 50 ? 'bg-hydrangea/60' : 'bg-strawberry';
+
+            setTimeout(() => {
+                const bar = document.getElementById('scoreBar');
+                const txt = document.getElementById('scoreText');
+                if(bar && txt) {
+                    bar.style.width = `${score}%`;
+                    txt.innerText = `${score}% MATCH`;
+                }
+            }, 100);
+
+            return `
+                <div class="fade-in flex flex-col h-full overflow-y-auto custom-scrollbar pr-2 pb-6">
+                    <div class="text-center mb-8 shrink-0">
+                        <h2 class="text-3xl sm:text-4xl font-bold text-basil leading-tight">${t(ui.resultsTitle)} ${state.name}</h2>
+                        <p class="text-basil/70 mt-2">${t(ui.resultsSub)}</p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-8 mb-12 relative bg-duckegg/10 p-8 rounded-[2rem] border-2 border-duckegg shadow-sm shrink-0">
+                        <img src="${device.image}" alt="${device.name}" class="w-48 h-auto object-contain p-2 bg-white rounded-2xl shadow-md border-4 border-white shrink-0">
+                        <div class="flex flex-col items-center sm:items-start w-full max-w-md">
+                            <h3 class="text-3xl sm:text-4xl font-bold text-basil mb-6 text-center sm:text-left leading-tight">${device.name}</h3>
+                            <div class="w-full bg-duckegg/30 rounded-full h-12 border-2 border-duckegg shadow-inner p-1.5 relative overflow-hidden">
+                                <div class="${scoreColor} h-full rounded-full transition-all duration-1000 ease-out" style="width: 0%;" id="scoreBar"></div>
+                                <div class="absolute inset-0 flex items-center justify-center font-bold text-base text-basil tracking-widest z-10" id="scoreText">0% MATCH</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 shrink-0">
+                        <div class="bg-white rounded-3xl p-6 border-2 border-lightgreen shadow-sm">
+                            <h4 class="font-bold text-basil mb-4 text-sm flex items-center bg-lightgreen/30 w-max px-3 py-1.5 rounded-xl uppercase tracking-wider">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path></svg> 
+                                ${t(ui.loveIt)}
+                            </h4>
+                            <ul class="space-y-3">
+                                ${likes.map(l => `<li class="flex items-start text-sm"><span class="text-basil mr-2 font-bold shrink-0">•</span><span class="text-basil leading-tight">${l}</span></li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="bg-white rounded-3xl p-6 border-2 border-strawberry shadow-sm">
+                            <h4 class="font-bold text-basil mb-4 text-sm flex items-center bg-strawberry/30 w-max px-3 py-1.5 rounded-xl uppercase tracking-wider">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"></path></svg>
+                                ${t(ui.botherIt)}
+                            </h4>
+                            <ul class="space-y-3">
+                                ${dislikes.map(d => `<li class="flex items-start text-sm"><span class="text-strawberry mr-2 font-bold shrink-0">•</span><span class="text-basil leading-tight">${d}</span></li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <button onclick="resetApp()" class="mt-10 mx-auto bg-basil hover:bg-basil/90 text-white font-bold py-4 px-10 rounded-2xl transition-colors shadow-md shrink-0">
+                        ${t(ui.tryAnother)}
+                    </button>
+                </div>
+            `;
+        }
+
+        function getNeedResultHtml() {
+            let score = 0;
+            for (let key in state.answers) {
+                if(typeof state.answers[key] === 'number') {
+                    score += state.answers[key];
+                }
+            }
+            const needsEreader = score >= 12; // Adjusted threshold for 15 questions
+            const hasTBR = state.answers['storage'] === 2; // Overflowing storage = TBR warning
+
+            const title = needsEreader ? ui.needYesTitle : ui.needNoTitle;
+            const desc = needsEreader ? ui.needYesDesc : ui.needNoDesc;
+            const btnText = needsEreader ? ui.needYesBtn : ui.needNoBtn;
+            const btnAction = needsEreader ? "startFlow('find')" : "startFlow('check')";
+            
+            const iconColor = needsEreader ? 'bg-lightgreen' : 'bg-strawberry';
+            const iconSvg = needsEreader 
+                ? `<svg class="w-12 h-12 text-basil" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`
+                : `<svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+            
+            const tbrNote = hasTBR ? `<p class="mt-4 text-basil/90 font-medium italic">${t(ui.tbrMessage)}</p>` : '';
+
+            return `
+                <div class="fade-in flex flex-col h-full py-10 items-center justify-center overflow-y-auto">
+                    
+                    <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left max-w-2xl w-full gap-6 bg-duckegg/10 p-8 rounded-[2rem] border-2 border-duckegg shadow-sm mb-8 shrink-0">
+                        <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-full ${iconColor} border-4 border-white flex items-center justify-center shadow-lg shrink-0">
+                            ${iconSvg}
+                        </div>
+                        <div class="flex-1">
+                            <h2 class="text-3xl sm:text-4xl font-bold text-basil mb-4 leading-tight">${t(title)}</h2>
+                            <div class="text-basil/80 text-lg mb-6">
+                                ${t(desc)}
+                                ${tbrNote}
+                            </div>
+                            <button onclick="${btnAction}" class="bg-basil hover:bg-basil/90 text-white font-bold py-4 px-8 rounded-2xl transition-all shadow-md transform hover:-translate-y-1 inline-block w-full sm:w-auto text-center">
+                                ${t(btnText)}
+                            </button>
+                        </div>
+                    </div>
+
+                    <button onclick="resetApp()" class="text-basil/60 hover:text-basil font-medium transition-colors flex items-center shrink-0">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> ${t(ui.back)}
+                    </button>
+                </div>
+            `;
+        }
+
+        function openModal(deviceId) {
+            const device = ereaders.find(d => d.id === deviceId);
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modal-content');
+            
+            let pros = [];
+            let cons = [];
+            
+            if(device.specs.color) pros.push("Color Display");
+            if(device.specs.waterproof) pros.push("Waterproof");
+            if(device.specs.buttons) pros.push("Physical Buttons");
+            if(device.specs.android) pros.push("Install Android Apps");
+            if(device.specs.wirelessCharging) pros.push("Wireless Charging");
+            
+            if(device.specs.battery === 'short') cons.push("Shorter battery life");
+            if(device.specs.ecosystem === 'amazon') cons.push("Locked to Amazon store");
+            if(!device.specs.waterproof) cons.push("Not waterproof");
+
+            if(pros.length === 0) pros.push("Solid standard e-reader");
+            if(cons.length === 0) cons.push("No major flaws");
+
+            content.innerHTML = `
+                <button onclick="closeModal()" class="absolute top-4 right-4 text-basil hover:text-strawberry transition-colors bg-white rounded-full p-1 shadow-sm z-10">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div class="flex justify-center bg-gray-50 rounded-2xl mb-6 p-4 border-2 border-duckegg">
+                    <img src="${device.image}" alt="${device.name}" class="h-40 object-contain shadow-sm rounded-xl bg-white p-2">
+                </div>
+                <h3 class="text-2xl font-bold text-basil mb-1 text-center">${device.name}</h3>
+                <div class="text-center mb-6">
+                    <p class="text-sm bg-duckegg/40 text-basil px-3 py-1.5 rounded-xl inline-block font-bold">${device.priceRange}</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="bg-lightgreen/20 p-4 rounded-2xl">
+                        <h4 class="font-bold text-basil uppercase text-xs mb-2 tracking-widest">Key Features</h4>
+                        <ul class="text-sm text-basil space-y-1">
+                            ${pros.map(p => `<li class="flex"><span class="text-basil font-bold mr-2">+</span> ${p}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="bg-strawberry/10 p-4 rounded-2xl">
+                        <h4 class="font-bold text-basil uppercase text-xs mb-2 tracking-widest">Keep in mind</h4>
+                        <ul class="text-sm text-basil space-y-1">
+                            ${cons.map(c => `<li class="flex"><span class="text-strawberry font-bold mr-2">-</span> ${c}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                content.classList.add('modal-enter');
+                modal.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.getElementById('modal-content').classList.remove('modal-enter');
+            }, 300);
+        }
+
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') {
+                closeModal();
+            }
+        });
+
+        function resetApp() {
+            state = {
+                lang: state.lang,
+                name: state.name,
+                path: null,
+                targetDeviceId: null,
+                currentQuestionIndex: 0,
+                answers: {}
+            };
+            render();
+        }
+
+        render();
+    </script>
+</body>
+</html>

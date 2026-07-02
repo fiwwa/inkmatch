@@ -190,7 +190,14 @@
         ];
 
         const questions = [
-            { id: 'source', q: { en: 'Where do most of your books come from?', id: 'Dari mana kebanyakan sumber bukumu?' }, options: [ { label: { en: 'Amazon Kindle Store', id: 'Toko Amazon Kindle' }, value: 'amazon' }, { label: { en: 'Kobo Store', id: 'Toko Kobo' }, value: 'kobo' }, { label: { en: 'iPusnas / Gramedia Digital', id: 'iPusnas / Gramedia Digital' }, value: 'android' }, { label: { en: 'Libby / Overdrive', id: 'Libby / Overdrive' }, value: 'libby' }, { label: { en: 'EPUB/PDF files (Sideload)', id: 'File EPUB/PDF (Sideload)' }, value: 'sideload' }, { label: { en: 'Mixed sources', id: 'Campuran' }, value: 'mixed' } ] },
+            { id: 'source', q: { en: 'Where do most of your books come from?', id: 'Dari mana kebanyakan sumber bukumu?' }, options: [ 
+                { label: { en: 'Amazon Kindle Store', id: 'Toko Amazon Kindle' }, value: 'amazon' }, 
+                { label: { en: 'Kobo Store', id: 'Toko Kobo' }, value: 'kobo' }, 
+                { label: { en: 'Indonesian local apps & Google Play Books', id: 'Aplikasi lokal Indonesia & Google Play Books' }, value: 'android' }, 
+                { label: { en: 'Libby / Overdrive', id: 'Libby / Overdrive' }, value: 'libby' }, 
+                { label: { en: 'EPUB/PDF files (Sideload)', id: 'File EPUB/PDF (Sideload)' }, value: 'sideload' }, 
+                { label: { en: 'Mixed sources', id: 'Campuran' }, value: 'mixed' } 
+            ] },
             { id: 'content', q: { en: 'What will you mostly read?', id: 'Apa yang paling sering kamu baca?' }, options: [ { label: { en: 'Novels', id: 'Novel' }, value: 'text' }, { label: { en: 'Manga / Comics', id: 'Manga / Komik' }, value: 'manga_comic' }, { label: { en: 'Textbooks', id: 'Buku Pelajaran' }, value: 'pdf' }, { label: { en: 'Mixed', id: 'Campuran' }, value: 'mixed' } ] },
             { id: 'reading_time', q: { en: 'How much time do you spend reading in a day?', id: 'Berapa lama waktu yang kamu habiskan untuk membaca dalam sehari?' }, options: [ { label: { en: 'Around 30 minutes', id: 'Sekitar 30 menit' }, value: 'short' }, { label: { en: '1 to 3 hours', id: '1 hingga 3 jam' }, value: 'mid' }, { label: { en: 'More than 3 hours!', id: 'Lebih dari 3 jam!' }, value: 'long' } ] },
             { id: 'waterproof', q: { en: 'How important is waterproofing?', id: 'Seberapa penting fitur <i>waterproof</i>?' }, options: [ { label: { en: 'Essential', id: 'Sangat penting' }, value: 'essential' }, { label: { en: 'Nice to have', id: 'Bagus kalau ada' }, value: 'nice' }, { label: { en: 'Do not care', id: 'Tidak peduli' }, value: 'none' } ] },
@@ -473,6 +480,8 @@
         }
 
         function calculateMatches() {
+            const loc = (en, id) => state.lang === 'en' ? en : id;
+            
             let scores = ereaders.map(device => {
                 let score = 0; 
                 let maxPossible = 0;
@@ -489,67 +498,84 @@
                     }
                 };
 
+                // Apply inherent ecosystem traits early for strong differentiation
+                if (device.specs.ecosystem === 'amazon') {
+                    reasons.push(loc("Sideloaded books sync progress across Kindle apps", "Buku sideload sinkron progresnya di aplikasi Kindle"));
+                    if (device.specs.age === 'old') {
+                        drawbacks.push(loc("Older model; might need jailbreaking for certain features", "Model lama; mungkin butuh jailbreak untuk fitur tertentu"));
+                    }
+                }
+                if (device.specs.ecosystem === 'kobo') {
+                    drawbacks.push(loc("Sideloaded books do not sync progress across Kobo apps", "Buku sideload tidak sinkron progresnya di aplikasi Kobo"));
+                }
+
                 // 1. Source Ecosystem
-                if (state.answers.source === 'amazon') evaluate(25, device.specs.ecosystem === 'amazon', "Seamless Amazon Store integration", "Buying Amazon books requires extra steps");
-                else if (state.answers.source === 'kobo') evaluate(25, device.specs.ecosystem === 'kobo', "Seamless Kobo Store integration", "Buying Kobo books requires extra steps");
-                else if (state.answers.source === 'android') evaluate(25, device.specs.android === true, "Full access to local Android apps like iPusnas", "Cannot install local Android reading apps natively");
-                else if (state.answers.source === 'libby') evaluate(15, device.specs.ecosystem === 'kobo' || device.specs.android, "Good Libby integration capabilities", "Amazon outside US doesn't support Libby easily");
-                else if (state.answers.source === 'sideload') evaluate(20, device.specs.ecosystem === 'android' || device.specs.ecosystem === 'kobo' || device.specs.ecosystem === 'amazon', "Easy to sideload and sync EPUBs (via Send to Kindle for Amazon)", null);
-                else if (state.answers.source === 'mixed') evaluate(25, device.specs.android === true, "Android allows access to multiple stores and formats", "Locked into a specific brand ecosystem");
+                if (state.answers.source === 'amazon') evaluate(25, device.specs.ecosystem === 'amazon', loc("Seamless Amazon Store integration", "Integrasi mulus dengan Toko Amazon"), loc("Buying Amazon books requires extra steps", "Beli buku Amazon butuh langkah ekstra"));
+                else if (state.answers.source === 'kobo') evaluate(25, device.specs.ecosystem === 'kobo', loc("Seamless Kobo Store integration", "Integrasi mulus dengan Toko Kobo"), loc("Buying Kobo books requires extra steps", "Beli buku Kobo butuh langkah ekstra"));
+                else if (state.answers.source === 'android') evaluate(25, device.specs.android === true, loc("Full access to local apps & Google Play", "Akses penuh ke aplikasi lokal & Google Play"), loc("Cannot install local reading apps natively", "Tidak bisa instal aplikasi baca lokal secara bawaan"));
+                else if (state.answers.source === 'libby') evaluate(15, device.specs.ecosystem === 'kobo' || device.specs.android, loc("Good Libby integration capabilities", "Integrasi Libby yang bagus"), loc("Amazon outside US doesn't support Libby easily", "Amazon di luar AS sulit memakai Libby"));
+                else if (state.answers.source === 'sideload') evaluate(20, device.specs.ecosystem === 'android' || device.specs.ecosystem === 'kobo' || device.specs.ecosystem === 'amazon', loc("Easy to sideload and sync EPUBs", "Mudah untuk sideload dan sinkronisasi EPUB"), null);
+                else if (state.answers.source === 'mixed') evaluate(25, device.specs.android === true, loc("Supports all your mixed sources natively", "Mendukung semua sumber bacaan campuranmu secara bawaan"), loc("Might not support local apps & Google Play Books natively", "Mungkin tidak mendukung aplikasi lokal & Google Play Books bawaan"));
 
                 // 2. Content / Color
-                if (state.answers.content === 'color') evaluate(20, device.specs.color === true, "Color screen for comics and covers", "Black and white screen only");
+                if (state.answers.content === 'color') evaluate(20, device.specs.color === true, loc("Color screen for comics and covers", "Layar warna untuk komik dan sampul"), loc("Black and white screen only", "Hanya layar hitam putih"));
                 else if (state.answers.content === 'manga_comic') {
-                    evaluate(15, device.specs.size === 'bigger', "Larger screen ideal for formatting", "Screen might be too small for complex layouts");
-                    if (device.specs.color) evaluate(5, true, "Color brings covers to life", null);
+                    evaluate(15, device.specs.size === 'bigger', loc("Larger screen ideal for formatting", "Layar besar ideal untuk format komik"), loc("Screen might be too small for complex layouts", "Layar mungkin terlalu kecil untuk layout kompleks"));
+                    if (device.specs.color) evaluate(5, true, loc("Color brings covers to life", "Layar warna menghidupkan sampul"), null);
                 } 
-                else if (state.answers.content === 'pdf') evaluate(15, device.specs.size === 'bigger', "Larger screen ideal for formatting", "Screen might be too small for complex layouts");
-                else if (state.answers.content === 'text') evaluate(10, !device.specs.color, "Sharper contrast with standard B&W screen", "Color screens can look slightly darker for pure text");
+                else if (state.answers.content === 'pdf') evaluate(15, device.specs.size === 'bigger', loc("Larger screen ideal for PDFs", "Layar besar ideal untuk PDF"), loc("Screen might be too small for complex layouts", "Layar mungkin terlalu kecil untuk layout kompleks"));
+                else if (state.answers.content === 'text') {
+                    if (device.specs.color) {
+                        evaluate(10, false, null, loc("Color screens use lower PPI, making pure text darker and less crisp", "Layar warna memakai PPI lebih rendah, teks biasa sedikit lebih gelap dan kurang tajam"));
+                    } else {
+                        evaluate(10, true, loc("Sharper contrast with standard B&W screen", "Kontras lebih tajam dengan layar B&W standar"), null);
+                    }
+                }
 
                 // 3. Size Preference
-                if (state.answers.size === 'compact') evaluate(15, device.specs.size === 'compact', "Compact and lightweight design", "Larger and heavier than preferred");
-                else if (state.answers.size === 'bigger') evaluate(15, device.specs.size === 'bigger', "Comfortable, book-like reading area", "Smaller screen than requested");
+                if (state.answers.size === 'compact') evaluate(15, device.specs.size === 'compact', loc("Compact and lightweight design", "Desain ringkas dan ringan"), loc("Larger and heavier than preferred", "Lebih besar dan berat dari yang diinginkan"));
+                else if (state.answers.size === 'bigger') evaluate(15, device.specs.size === 'bigger', loc("Comfortable, book-like reading area", "Area baca nyaman dan luas seperti buku"), loc("Smaller screen than requested", "Layar lebih kecil dari yang diminta"));
 
                 // 4. Waterproofing
-                if (state.answers.waterproof === 'essential') evaluate(15, device.specs.waterproof === true, "Fully waterproof for reading anywhere", "Not waterproof");
+                if (state.answers.waterproof === 'essential') evaluate(15, device.specs.waterproof === true, loc("Fully waterproof for reading anywhere", "Sepenuhnya anti-air, baca di mana saja"), loc("Not waterproof", "Tidak anti-air"));
                 else if (state.answers.waterproof === 'nice') {
-                    if (device.specs.waterproof) evaluate(5, true, "Has bonus waterproofing", null);
+                    if (device.specs.waterproof) evaluate(5, true, loc("Has bonus waterproofing", "Punya bonus fitur anti-air"), null);
                 }
 
                 // 5. Buttons
-                if (state.answers.buttons === 'buttons') evaluate(10, device.specs.buttons === true, "Has physical page-turn buttons", "Lacks physical buttons");
-                else if (state.answers.buttons === 'touch') evaluate(10, device.specs.buttons === false, "Streamlined touchscreen-only design", null);
+                if (state.answers.buttons === 'buttons') evaluate(10, device.specs.buttons === true, loc("Has physical page-turn buttons", "Punya tombol fisik pindah halaman"), loc("Lacks physical buttons", "Tidak ada tombol fisik"));
+                else if (state.answers.buttons === 'touch') evaluate(10, device.specs.buttons === false, loc("Streamlined touchscreen-only design", "Desain layar sentuh ramping"), null);
 
                 // 6. Library/Libby
-                if (state.answers.library === 'one') evaluate(15, device.specs.libby === 'one' || device.specs.android || device.specs.libby === 'multiple', "Supports your library needs", "Might not support Libby directly");
-                else if (state.answers.library === 'multiple') evaluate(15, device.specs.android || device.specs.ecosystem === 'amazon', "Can handle multiple library sources/cards", "Kobo natively only supports one active Libby card");
+                if (state.answers.library === 'one') evaluate(15, device.specs.libby === 'one' || device.specs.android || device.specs.libby === 'multiple', loc("Supports your library needs", "Mendukung kebutuhan perpustakaanmu"), loc("Might not support Libby directly", "Mungkin tidak mendukung Libby langsung"));
+                else if (state.answers.library === 'multiple') evaluate(15, device.specs.android || device.specs.ecosystem === 'amazon', loc("Can handle multiple library sources/cards", "Bisa menangani banyak kartu perpustakaan"), loc("Kobo natively only supports one active Libby card", "Kobo bawaan hanya mendukung satu kartu Libby aktif"));
 
                 // 7. Stylus / Notes
-                if (state.answers.notes === 'yes') evaluate(15, device.specs.stylus === true, "Supports stylus input for handwritten notes", "Cannot take handwritten notes");
+                if (state.answers.notes === 'yes') evaluate(15, device.specs.stylus === true, loc("Supports stylus input for handwritten notes", "Mendukung stylus untuk catatan tangan"), loc("Cannot take handwritten notes", "Tidak bisa membuat catatan tangan"));
 
                 // 8. Wireless Charging
-                if (state.answers.wireless === 'yes') evaluate(5, device.specs.wirelessCharging === true, "Supports convenient wireless charging", "Requires a cable to charge");
+                if (state.answers.wireless === 'yes') evaluate(5, device.specs.wirelessCharging === true, loc("Supports convenient wireless charging", "Mendukung wireless charging yang praktis"), loc("Requires a cable to charge", "Butuh kabel untuk mengisi daya"));
                 
                 // 10. Reading Time (Battery)
-                if (state.answers.reading_time === 'long') evaluate(15, device.specs.battery === 'long', "Excellent battery life for long sessions", "Battery might need more frequent charging");
+                if (state.answers.reading_time === 'long') evaluate(15, device.specs.battery === 'long', loc("Excellent battery life for long sessions", "Daya tahan baterai luar biasa untuk baca lama"), loc("Battery might need more frequent charging", "Baterai mungkin butuh lebih sering dicas"));
                 else if (state.answers.reading_time === 'short') {
-                    if(device.specs.battery !== 'long') evaluate(5, true, "Sufficient battery for casual reading", null);
+                    if(device.specs.battery !== 'long') evaluate(5, true, loc("Sufficient battery for casual reading", "Baterai cukup untuk baca santai"), null);
                 }
 
                 // 11. Tracker Logic
                 if (state.answers.tracker === 'goodreads') {
-                    evaluate(10, device.specs.ecosystem === 'amazon' || device.specs.android, "Goodreads integration supported", "No built-in Goodreads sync");
+                    evaluate(10, device.specs.ecosystem === 'amazon' || device.specs.android, loc("Goodreads integration supported", "Mendukung integrasi Goodreads"), loc("No built-in Goodreads sync", "Tidak ada sinkronisasi Goodreads bawaan"));
                 } else if (state.answers.tracker === 'storygraph') {
-                    evaluate(10, device.specs.ecosystem === 'kobo' || device.specs.android, "Storygraph integration supported", "No built-in Storygraph sync");
+                    evaluate(10, device.specs.ecosystem === 'kobo' || device.specs.android, loc("Storygraph integration supported", "Mendukung integrasi Storygraph"), loc("No built-in Storygraph sync", "Tidak ada sinkronisasi Storygraph bawaan"));
                 } else if (state.answers.tracker === 'other') {
-                    evaluate(10, device.specs.android === true, "Can install third-party tracking apps", "Locked ecosystem limits tracking apps");
+                    evaluate(10, device.specs.android === true, loc("Can install third-party tracking apps", "Bisa menginstal aplikasi pelacak pihak ketiga"), loc("Locked ecosystem limits tracking apps", "Ekosistem tertutup membatasi aplikasi pelacak"));
                 }
 
                 // Device Age Preference
                 if (state.answers.device_age === 'new') {
-                    evaluate(15, device.specs.age === 'new' || device.specs.age === 'mid', "Newer device, better longevity", "Older device, might stop receiving updates soon");
+                    evaluate(15, device.specs.age === 'new' || device.specs.age === 'mid', loc("Newer device, better longevity", "Perangkat lebih baru, lebih awet"), loc("Older device, might stop receiving updates soon", "Perangkat lama, mungkin segera berhenti dapat update"));
                 } else if (state.answers.device_age === 'old') {
-                    if (device.specs.age === 'old') evaluate(5, true, "Older device (easier to jailbreak if needed)", null);
+                    if (device.specs.age === 'old') evaluate(5, true, loc("Older device (easier to jailbreak if needed)", "Perangkat lama (lebih mudah dijailbreak jika butuh)"), null);
                 }
 
                 // 12. Budget
@@ -557,21 +583,21 @@
                     maxPossible += 30; 
                     if (device.specs.budget <= state.answers.budget) {
                         score += 30;
-                        reasons.push("Fits comfortably within your budget");
+                        reasons.push(loc("Fits comfortably within your budget", "Sesuai dengan anggaranmu"));
                     } else {
-                        drawbacks.push("Exceeds your requested budget significantly");
+                        drawbacks.push(loc("Exceeds your requested budget significantly", "Jauh melebihi anggaran yang kamu minta"));
                     }
                 }
 
                 if (device.specs.extra && device.specs.extra.includes('Google Drive & Dropbox integration')) {
-                    reasons.push("Built-in Google Drive & Dropbox integration");
+                    reasons.push(loc("Built-in Google Drive & Dropbox integration", "Integrasi Google Drive & Dropbox bawaan"));
                 }
                 
                 let percentage = maxPossible > 0 ? Math.round((score / maxPossible) * 100) : 0;
                 percentage = Math.max(0, Math.min(100, percentage)); 
 
-                if(reasons.length === 0) reasons.push("Overall solid device");
-                if(drawbacks.length === 0) drawbacks.push("No major conflicts with your preferences");
+                if(reasons.length === 0) reasons.push(loc("Overall solid device", "Secara keseluruhan perangkat yang bagus"));
+                if(drawbacks.length === 0) drawbacks.push(loc("No major conflicts with your preferences", "Tidak ada konflik besar dengan preferensimu"));
 
                 reasons = [...new Set(reasons)].slice(0, 4);
                 drawbacks = [...new Set(drawbacks)].slice(0, 3);
@@ -640,7 +666,7 @@
                                 <div class="absolute top-0 right-0 bg-hydrangea text-white text-base font-bold px-4 py-1.5 rounded-bl-2xl z-10 shadow-sm">${device.score}%</div>
                                 <img src="${device.image}" alt="${device.name}" class="w-20 h-24 object-contain rounded-xl mb-4 bg-gray-50 p-1 group-hover:scale-105 transition-transform">
                                 <h4 class="font-bold text-basil text-sm mb-1 leading-tight h-10 flex items-center">${device.name}</h4>
-                                <button onclick="openModal('${device.id}')" class="mt-4 text-sm font-bold text-basil bg-duckegg/40 hover:bg-duckegg px-4 py-2 rounded-xl transition-colors w-full">View Details</button>
+                                <button onclick="openModal('${device.id}')" class="mt-4 text-sm font-bold text-basil bg-duckegg/40 hover:bg-duckegg px-4 py-2 rounded-xl transition-colors w-full">${t(ui.viewDetails)}</button>
                             </div>
                         `).join('')}
                     </div>
@@ -843,6 +869,7 @@
         }
 
         function openModal(deviceId) {
+            const loc = (en, id) => state.lang === 'en' ? en : id;
             const device = ereaders.find(d => d.id === deviceId);
             const modal = document.getElementById('modal');
             const content = document.getElementById('modal-content');
@@ -850,18 +877,27 @@
             let pros = [];
             let cons = [];
             
-            if(device.specs.color) pros.push("Color Display");
-            if(device.specs.waterproof) pros.push("Waterproof");
-            if(device.specs.buttons) pros.push("Physical Buttons");
-            if(device.specs.android) pros.push("Install Android Apps");
-            if(device.specs.wirelessCharging) pros.push("Wireless Charging");
+            if(device.specs.color) pros.push(loc("Color Display", "Layar Berwarna"));
+            if(device.specs.waterproof) pros.push(loc("Waterproof", "Anti Air"));
+            if(device.specs.buttons) pros.push(loc("Physical Buttons", "Tombol Fisik"));
+            if(device.specs.android) pros.push(loc("Install Android Apps", "Bisa Instal Aplikasi Android"));
+            if(device.specs.wirelessCharging) pros.push(loc("Wireless Charging", "Pengisian Daya Nirkabel"));
             
-            if(device.specs.battery === 'short') cons.push("Shorter battery life");
-            if(device.specs.ecosystem === 'amazon') cons.push("Locked to Amazon store");
-            if(!device.specs.waterproof) cons.push("Not waterproof");
+            if (device.specs.ecosystem === 'amazon') {
+                pros.push(loc("Sideloaded books sync across apps", "Buku sideload sinkron di semua aplikasi"));
+                cons.push(loc("Locked to Amazon store", "Terkunci di ekosistem Amazon"));
+                if (device.specs.age === 'old') {
+                    cons.push(loc("Might need jailbreak for extra features", "Mungkin butuh jailbreak untuk fitur ekstra"));
+                }
+            } else if (device.specs.ecosystem === 'kobo') {
+                cons.push(loc("Sideloaded books don't sync across apps", "Buku sideload tidak sinkron di semua aplikasi"));
+            }
 
-            if(pros.length === 0) pros.push("Solid standard e-reader");
-            if(cons.length === 0) cons.push("No major flaws");
+            if(device.specs.battery === 'short') cons.push(loc("Shorter battery life", "Daya tahan baterai lebih singkat"));
+            if(!device.specs.waterproof) cons.push(loc("Not waterproof", "Tidak anti air"));
+            
+            if(pros.length === 0) pros.push(loc("Solid standard e-reader", "E-reader standar yang tangguh"));
+            if(cons.length === 0) cons.push(loc("No major flaws", "Tidak ada kekurangan besar"));
 
             content.innerHTML = `
                 <button onclick="closeModal()" class="absolute top-4 right-4 text-basil hover:text-strawberry transition-colors bg-white rounded-full p-1 shadow-sm z-10">
@@ -877,13 +913,13 @@
                 
                 <div class="space-y-4">
                     <div class="bg-lightgreen/20 p-4 rounded-2xl">
-                        <h4 class="font-bold text-basil uppercase text-xs mb-2 tracking-widest">Key Features</h4>
+                        <h4 class="font-bold text-basil uppercase text-xs mb-2 tracking-widest">${loc("Key Features", "Fitur Utama")}</h4>
                         <ul class="text-sm text-basil space-y-1">
                             ${pros.map(p => `<li class="flex"><span class="text-basil font-bold mr-2">+</span> ${p}</li>`).join('')}
                         </ul>
                     </div>
                     <div class="bg-strawberry/10 p-4 rounded-2xl">
-                        <h4 class="font-bold text-basil uppercase text-xs mb-2 tracking-widest">Keep in mind</h4>
+                        <h4 class="font-bold text-basil uppercase text-xs mb-2 tracking-widest">${loc("Keep in mind", "Perlu Diingat")}</h4>
                         <ul class="text-sm text-basil space-y-1">
                             ${cons.map(c => `<li class="flex"><span class="text-strawberry font-bold mr-2">-</span> ${c}</li>`).join('')}
                         </ul>

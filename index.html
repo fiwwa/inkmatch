@@ -49,8 +49,17 @@
     
     <div id="app" class="w-full max-w-4xl mx-auto h-screen p-4 md:p-6 flex flex-col relative overflow-hidden"></div>
 
+    <!-- Details Modal -->
     <div id="modal" class="fixed inset-0 bg-basil/80 z-50 hidden flex-col items-center justify-center p-4 opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-3xl p-6 w-full max-w-lg relative shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto custom-scrollbar border-4 border-duckegg" id="modal-content">
+        </div>
+    </div>
+
+    <!-- Buy Link Not Found Modal -->
+    <div id="buy-modal" class="fixed inset-0 bg-basil/80 z-[60] hidden flex-col items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-lg relative shadow-2xl text-center border-4 border-duckegg">
+            <h3 class="text-lg font-medium text-basil mb-6" id="buy-modal-text"></h3>
+            <button onclick="closeBuyModal()" class="bg-darkpink hover:bg-darkpink/90 text-white font-bold py-2.5 px-8 rounded-xl transition-colors shadow-sm">OK</button>
         </div>
     </div>
 
@@ -94,6 +103,8 @@
             drawbacks: { en: "Potential drawbacks", id: "Potensi kekurangan" },
             otherOptions: { en: "Other Great Options", id: "Pilihan Bagus Lainnya" },
             viewDetails: { en: "View Details", id: "Lihat Detail" },
+            buyNow: { en: "Buy Now", id: "Beli Sekarang" },
+            noLinkMsg: { en: "Sorry, we don't have the link for this one now :(", id: "Maaf, kami belum punya link untuk yang ini :(" },
 
             resultsTitle: { en: "Your Match Results,", id: "Hasil Kecocokanmu," },
             resultsSub: { en: "Let's see how this device fits your lifestyle", id: "Mari kita lihat seberapa cocok perangkat ini denganmu" },
@@ -104,12 +115,11 @@
             needYesTitle: { en: "Yes! You definitely need an e-reader", id: "Ya! Kamu sepertinya butuh e-reader" },
             needYesDesc: { en: "Based on your answers, an e-ink screen will save your eyes, keep you focused, and save physical space in your room.", id: "Berdasarkan jawabanmu, layar e-ink akan menyelamatkan matamu, membantumu fokus, dan menghemat ruang di kamarmu." },
             needYesBtn: { en: "Find the best e-reader!", id: "Cari e-reader terbaik!" },
+            savingUp: { en: "You can start saving up now!", id: "Kamu bisa mulai menabung dari sekarang!" },
             
             needNoTitle: { en: "You might not need one right now", id: "Kamu mungkin belum butuh e-reader saat ini" },
             needNoDesc: { en: "It seems like you are doing just fine with physical books or your current devices. But if you're curious, you can still check them out.", id: "Sepertinya kamu masih nyaman dengan buku fisik atau gadget saat ini. Tapi kalau penasaran, kamu tetap bisa cek opsi yang ada." },
             needNoBtn: { en: "Check for e-readers", id: "Cek daftar e-reader" },
-            
-            tbrMessage: { en: "Also, you might want to finish your physical TBR first.", id: "Selain itu, mungkin kamu sebaiknya menyelesaikan timbunan buku fisikmu dulu." },
 
             faqTitle: { en: "Frequently Asked Questions", id: "Pertanyaan Umum" },
             faq1Q: { en: "Which feature should I use?", id: "Fitur mana yang harus saya pakai?" },
@@ -120,7 +130,7 @@
             faq2Q: { en: "Where can I buy the e-reader?", id: "Di mana saya bisa membeli e-reader?" },
             faq2A: { 
                 en: "You can buy them at official stores on marketplaces, Carousell, Facebook Marketplace, or trusted Instagram sellers.<br><span class=\"text-basil font-medium block mt-1\"><strong>Beware of secondhand frauds!</strong> Fraudsters usually refuse to use marketplace platforms for transactions, have a bot-like username (e.g., random word/name with many numbers), and put the price suspiciously low. Always use an official platform's secure payment system!</span>", 
-                id: "Kamu bisa membelinya di website atau marketplace toko resmi, Carousell, Facebook Marketplace, atau penjual di Instagram yang terpercaya.<br><span class=\"text-basil font-medium block mt-1\"><strong>Hati-hati penipuan!</strong> Penipu biasanya menolak untuk melakukan transaksi melalui platform marketplace, memiliki username seperti bot (misalnya, kata atau nama acak dengan angka), dan memberikan harga yang sangat rendah. Usahakan selalu gunakan platform resmi untuk pembayaran yang lebih aman!</span>" 
+                id: "Kamu bisa membelinya di website resmi, marketplace (kami sudah menyertakan link untuk hampir semua e-reader yang kami temukan!), Carousell dan Facebook Marketplace untuk perangkat bekas, atau penjual di Instagram terpercaya yang menawarkan jasa titip beli.<br><span class=\"text-basil font-medium block mt-1\"><strong>Hati-hati penipuan barang bekas!</strong> Penipu biasanya menolak untuk melakukan transaksi melalui platform marketplace, memiliki username seperti bot (misalnya, kata atau nama acak dengan banyak angka), dan memberikan harga yang sangat rendah. Usahakan selalu gunakan platform resmi untuk pembayaran yang lebih aman!</span>" 
             },
             faq3Q: { en: "Is a screen protector important?", id: "Apakah anti gores / screen protector penting?" },
             faq3A: { en: "A flip cover is mostly fine. However, if you are clumsy and feel like you need extra protection, you can use it. Note that it might decrease touch sensitivity and could end up bubbly if applied wrong.", id: "Flip cover / case lipat biasanya sudah cukup. Tapi kalau kamu ceroboh dan butuh perlindungan ekstra, silakan pakai. Catatan: anti gores bisa mengurangi sensitivitas sentuhan dan bisa menggelembung kalau salah pasang." },
@@ -135,6 +145,9 @@
             faq6A: { en: "Libraries that allow 'Send to Kindle' are mostly US libraries. If you have access to those, you're all good! If you use Kobo, you can borrow directly from Libby natively, but you can only log into 1 library card at a time.", id: "Perpustakaan yang mendukung opsi 'Send to Kindle' sebagian besar adalah perpustakaan AS. Kalau kamu punya akses ke sana, aman! Kalau kamu pakai Kobo, kamu bisa pinjam langsung dari Libby, tapi hanya bisa login 1 kartu perpustakaan dalam satu waktu." },
             faq7Q: { en: "What is a Jailbreak and why do people do it?", id: "Apa itu Jailbreak dan kenapa orang melakukannya?" },
             faq7A: { en: "Jailbreaking is a software modification that removes manufacturer restrictions. <strong>For Amazon Kindles</strong>, users jailbreak to break out of the Amazon ecosystem—allowing them to read books in EPUB formats outside the Kindle app, customize screensavers, or block forced updates. <em>(Note: Amazon actively tries to block jailbreaking, especially on newer devices).</em><br><br><strong>For Kobo devices</strong>, the ecosystem is already open, so users don't technically 'jailbreak' them. Instead, they install other community-made tools simply to get more advanced formatting options, better PDF support, or complex reading statistics.", id: "Jailbreaking adalah modifikasi software untuk menghapus batasan dari produsen. <strong>Untuk Amazon Kindle</strong>, pengguna melakukan jailbreak agar bisa keluar dari ekosistem Amazon—sehingga bisa membaca format EPUB di luar aplikasi bawaan Kindle, mengubah screensaver, atau memblokir update paksa. <em>(Catatan: Amazon sangat aktif memblokir celah jailbreak, terutama di perangkat baru).</em><br><br><strong>Untuk perangkat Kobo</strong>, ekosistemnya sudah terbuka, jadi secara teknis tidak butuh 'jailbreak'. Pengguna Kobo biasanya menginstal alat buatan komunitas tambahan hanya untuk mendapatkan fitur formatting tingkat lanjut, dukungan PDF yang lebih baik, atau statistik baca yang detail." },
+            faq8Q: { en: "Why are Android-based devices usually more expensive?", id: "Kenapa e-reader berbasis Android biasanya lebih mahal?" },
+            faq8A: { en: "Android e-readers run a full operating system, allowing you to install apps directly from the Google Play Store (so you can have Kindle, Kobo, and local library apps all on one device). Some even offer interchangeable color/B&W modes and faster refresh rates. However, running an entire OS and multiple apps significantly drains the battery faster than a standard e-reader.", id: "E-reader Android menjalankan sistem operasi penuh, memungkinkanmu mengunduh aplikasi dari Google Play Store (jadi kamu bisa punya aplikasi Kindle, Kobo, dan iPusnas sekaligus dalam satu perangkat). Beberapa juga menawarkan mode warna/B&W yang bisa diubah dan refresh rate cepat. Namun, menjalankan OS penuh dan banyak aplikasi membuat baterainya jauh lebih cepat habis dibandingkan e-reader biasa." },
+            
             surveyText: { en: "Submit E-Reader Experience", id: "Kirim Pengalaman E-Reader" },
             qnaText: { en: "Have more questions?", id: "Punya pertanyaan lain?" },
             continueCheck: { en: "Continue with selected", id: "Lanjutkan dengan pilihan" },
@@ -143,71 +156,76 @@
         };
 
         const ereaders = [
-            { id: "d_0", name: "Kindle Paperwhite 11th Gen", image: "https://i.ebayimg.com/images/g/OlcAAOSw~DFn-TKl/s-l1200.jpg", priceRange: "Rp1.500.000 - Rp2.300.000", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "8GB, 16GB", budget: 1, age: "mid" } },
-            { id: "d_1", name: "Kindle Paperwhite 11th Gen Signature Edition", image: "https://i.ebayimg.com/images/g/OlcAAOSw~DFn-TKl/s-l1200.jpg", priceRange: "Rp1.850.000 - Rp3.000.000", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: true, stylus: false, storage: "32GB", budget: 2, age: "mid" } },
-            { id: "d_2", name: "Kindle Paperwhite 12th Gen", image: "https://www.wonderprice.co.uk/image/cache/wp/gp/Amazon/amazon-kindle-paperwhite-black-2-800x800.webp", priceRange: "Rp2.500.000 - Rp3.300.000", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "16GB", budget: 2, age: "new" } },
-            { id: "d_3", name: "Kindle Paperwhite 12th Gen Signature Edition", image: "https://www.wonderprice.co.uk/image/cache/wp/gp/Amazon/amazon-kindle-paperwhite-black-2-800x800.webp", priceRange: "Rp2.700.000 - Rp3.600.000", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: true, stylus: false, storage: "32GB", budget: 3, age: "new" } },
-            { id: "d_4", name: "Kindle Paperwhite 10th Gen", image: "https://m.media-amazon.com/images/I/616v826nywL._AC_UF1000,1000_QL80_.jpg", priceRange: "Rp1.300.000 - Rp1.800.000", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "compact", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "8GB, 32GB", budget: 1, age: "old" } },
-            { id: "d_5", name: "Kindle Basic 11th Gen", image: "https://ecommerce.datablitz.com.ph/cdn/shop/files/sd4f86s5adf4sad_1024x.jpg?v=1756521504", priceRange: "Rp1.500.000 - Rp2.500.000", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: false, warmLight: false, size: "compact", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "16GB", budget: 1, age: "mid" } },
-            { id: "d_6", name: "Kindle Basic 10th Gen", image: "https://toyorgame.com.sg/cdn/shop/products/Kindle_1.jpg?v=1612498731", priceRange: "Rp1.000.000 - Rp1.600.000", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: false, warmLight: false, size: "compact", battery: "mid", libby: "multiple", wirelessCharging: false, stylus: false, storage: "4GB", budget: 1, age: "old" } },
-            { id: "d_7", name: "Kindle Oasis", image: "https://m.media-amazon.com/images/I/61moEqqnwzL._AC_UF1000,1000_QL80_.jpg", priceRange: "Rp2.500.000 - Rp4.000.000", specs: { ecosystem: "amazon", android: false, color: false, buttons: true, waterproof: true, warmLight: true, size: "bigger", battery: "short", libby: "multiple", wirelessCharging: false, stylus: false, storage: "8GB, 32GB", budget: 2, age: "old" } },
-            { id: "d_8", name: "Kindle Colorsoft", image: "https://m.media-amazon.com/images/I/71DVdgdBZtL._AC_UF700,800_QL80_.jpg", priceRange: "Rp3.800.000 - Rp5.000.000", specs: { ecosystem: "amazon", android: false, color: true, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "mid", libby: "multiple", wirelessCharging: false, stylus: false, storage: "16GB", budget: 3, age: "new" } },
-            { id: "d_9", name: "Kindle Colorsoft Signature Edition", image: "https://m.media-amazon.com/images/I/71DVdgdBZtL._AC_UF700,800_QL80_.jpg", priceRange: "Rp5.000.000 - Rp6.000.000", specs: { ecosystem: "amazon", android: false, color: true, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "short", libby: "multiple", wirelessCharging: true, stylus: false, storage: "32GB", budget: 3, age: "new" } },
-            { id: "d_10", name: "Kindle Paperwhite Kids", image: "https://m.media-amazon.com/images/I/710ZbKFcC5L._AC_UF1000,1000_QL80_.jpg", priceRange: "Rp2.000.000 - Rp3.000.000", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "16GB", budget: 2, age: "mid" } },
-            { id: "d_11", name: "Kobo Clara BW", image: "https://m.media-amazon.com/images/I/61COzsfwaUL.jpg", priceRange: "Rp2.000.000 - Rp3.300.000", specs: { ecosystem: "kobo", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "compact", battery: "mid", libby: "one", wirelessCharging: false, stylus: false, storage: "16GB", budget: 2, age: "new" } },
-            { id: "d_12", name: "Kobo Clara Colour", image: "https://m.media-amazon.com/images/I/71WXIbM44gL.jpg", priceRange: "Rp2.600.000 - Rp3.800.000", specs: { ecosystem: "kobo", android: false, color: true, buttons: false, waterproof: true, warmLight: true, size: "compact", battery: "short", libby: "one", wirelessCharging: false, stylus: false, storage: "16GB", budget: 3, age: "new" } },
-            { id: "d_13", name: "Kobo Libra Colour", image: "https://www.pbtech.co.nz/imgprod/T/A/TABKOB42802.jpg?h=510259536", priceRange: "Rp4.000.000 - Rp5.200.000", specs: { ecosystem: "kobo", android: false, color: true, buttons: true, waterproof: true, warmLight: true, size: "bigger", battery: "short", libby: "one", wirelessCharging: false, stylus: true, storage: "32GB", budget: 3, extra: "Google Drive & Dropbox integration", age: "new" } },
-            { id: "d_14", name: "BOOX Go 6 (Gen 2)", image: "https://euroshop.boox.com/cdn/shop/files/20260608-180657.jpg?v=1780913629", priceRange: "Rp2.500.000 - Rp3.000.000", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: true, storage: "32GB", budget: 3, age: "new" } },
-            { id: "d_15", name: "BOOX Go 7 Color", image: "https://m.media-amazon.com/images/I/61eag2NcnAL.jpg", priceRange: "Rp4.500.000 - Rp5.700.000", specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "64GB", budget: 3, age: "new" } },
-            { id: "d_16", name: "BOOX Go 7 BW", image: "https://img.myshopline.com/image/store/1669199018402/03-5.jpeg?w=1000&h=1000", priceRange: "Rp4.000.000 - Rp4.700.000", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "64GB", budget: 3, age: "new" } },
-            { id: "d_17", name: "BOOX Poke 5", image: "https://sc04.alicdn.com/kf/H285d0f1819c0469595b280c04eee28e85.jpg", priceRange: "Rp2.000.000 - Rp3.000.000", specs: { ecosystem: "android", android: true, color: false, buttons: false, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB", budget: 2, age: "mid" } },
-            { id: "d_18", name: "BOOX Poke 4 Lite", image: "https://shop.boox.com/cdn/shop/products/1_73786023-d98b-47ba-821f-ee0b618bc69a.jpg?v=1665209995", priceRange: "Rp1.500.000 - Rp2.400.000", specs: { ecosystem: "android", android: true, color: false, buttons: false, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "16GB", budget: 1, age: "old" } },
-            { id: "d_19", name: "Meebook M6C", image: "https://i.ebayimg.com/images/g/oOMAAOSwTe1mer0x/s-l1200.png", priceRange: "Rp2.000.000 - Rp3.000.000", specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB", budget: 2, age: "new" } },
-            { id: "d_20", name: "Meebook M7", image: "https://m.media-amazon.com/images/I/81SzVOZXmYL._AC_SL1500_.jpg", priceRange: "Rp3.000.000 - Rp4.000.000", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB", budget: 2, age: "mid" } },
-            { id: "d_21", name: "Bigme B751C", image: "https://m.media-amazon.com/images/I/61J3OwOa9vL.jpg", priceRange: "Rp4.000.000 - Rp5.500.000", specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: true, storage: "64GB", budget: 3, age: "new" } },
-            { id: "d_22", name: "Bigme B6 BW", image: "https://m.media-amazon.com/images/I/61RXFMyTzQL.jpg", priceRange: "Rp2.000.000 - Rp3.300.000", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB, 64GB", budget: 3, age: "mid" } },
-            { id: "d_23", name: "Bigme B6 Color", image: "https://m.media-amazon.com/images/I/618R7hBZ5bL.jpg", priceRange: "Rp2.800.000 - Rp3.300.000", specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB, 64GB", budget: 3, age: "mid" } },
-            { id: "d_24", name: "BOOX Leaf2", image: "https://images.71media.pl/566/maxi/onyx-boox-leaf-2-black-front.jpg", priceRange: "Rp2.500.000 - Rp3.500.000", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB", budget: 2, age: "old" } },
-            { id: "d_25", name: "Kindle Paperwhite 7th Gen", image: "https://m.media-amazon.com/images/I/61shyF063PL._AC_UF894,1000_QL80_.jpg", priceRange: "Rp700.000 - Rp1.500.000", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: false, warmLight: false, size: "compact", battery: "mid", libby: "multiple", wirelessCharging: false, stylus: false, storage: "4GB", budget: 1, age: "old" } }
+            { id: "d_0", name: "Kindle Paperwhite 11th Gen", image: "https://i.ebayimg.com/images/g/OlcAAOSw~DFn-TKl/s-l1200.jpg", priceRange: "Rp1.500.000 - Rp2.300.000", buyLink: "https://s.shopee.co.id/8fQS9mtE6m", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "8GB, 16GB", budget: 1, age: "mid" } },
+            { id: "d_1", name: "Kindle Paperwhite 11th Gen Signature Edition", image: "https://i.ebayimg.com/images/g/OlcAAOSw~DFn-TKl/s-l1200.jpg", priceRange: "Rp1.850.000 - Rp3.000.000", buyLink: "https://s.shopee.co.id/8fQS9mtE6m", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: true, stylus: false, storage: "32GB", budget: 2, age: "mid" } },
+            { id: "d_2", name: "Kindle Paperwhite 12th Gen", image: "https://www.wonderprice.co.uk/image/cache/wp/gp/Amazon/amazon-kindle-paperwhite-black-2-800x800.webp", priceRange: "Rp2.500.000 - Rp3.300.000", buyLink: "https://s.shopee.co.id/60Pgz7OBqm", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "16GB", budget: 2, age: "new" } },
+            { id: "d_3", name: "Kindle Paperwhite 12th Gen Signature Edition", image: "https://www.wonderprice.co.uk/image/cache/wp/gp/Amazon/amazon-kindle-paperwhite-black-2-800x800.webp", priceRange: "Rp2.700.000 - Rp3.600.000", buyLink: "https://s.shopee.co.id/60Pgz7OBqm", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: true, stylus: false, storage: "32GB", budget: 3, age: "new" } },
+            { id: "d_4", name: "Kindle Paperwhite 10th Gen", image: "https://m.media-amazon.com/images/I/616v826nywL._AC_UF1000,1000_QL80_.jpg", priceRange: "Rp1.300.000 - Rp1.800.000", buyLink: "undefined", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "compact", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "8GB, 32GB", budget: 1, age: "old" } },
+            { id: "d_5", name: "Kindle Basic 11th Gen", image: "https://ecommerce.datablitz.com.ph/cdn/shop/files/sd4f86s5adf4sad_1024x.jpg?v=1756521504", priceRange: "Rp1.500.000 - Rp2.500.000", buyLink: "https://s.shopee.co.id/3B5Vba3WiP", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: false, warmLight: false, size: "compact", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "16GB", budget: 1, age: "mid" } },
+            { id: "d_6", name: "Kindle Basic 10th Gen", image: "https://toyorgame.com.sg/cdn/shop/products/Kindle_1.jpg?v=1612498731", priceRange: "Rp1.000.000 - Rp1.600.000", buyLink: "https://s.shopee.co.id/6ffNmPopnM", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: false, warmLight: false, size: "compact", battery: "mid", libby: "multiple", wirelessCharging: false, stylus: false, storage: "4GB", budget: 1, age: "old" } },
+            { id: "d_7", name: "Kindle Oasis", image: "https://m.media-amazon.com/images/I/61moEqqnwzL._AC_UF1000,1000_QL80_.jpg", priceRange: "Rp2.500.000 - Rp4.000.000", buyLink: "undefined", specs: { ecosystem: "amazon", android: false, color: false, buttons: true, waterproof: true, warmLight: true, size: "bigger", battery: "short", libby: "multiple", wirelessCharging: false, stylus: false, storage: "8GB, 32GB", budget: 2, age: "old" } },
+            { id: "d_8", name: "Kindle Colorsoft", image: "https://m.media-amazon.com/images/I/71DVdgdBZtL._AC_UF700,800_QL80_.jpg", priceRange: "Rp3.800.000 - Rp5.000.000", buyLink: "https://s.shopee.co.id/60PgzMHVoo", specs: { ecosystem: "amazon", android: false, color: true, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "mid", libby: "multiple", wirelessCharging: false, stylus: false, storage: "16GB", budget: 3, age: "new" } },
+            { id: "d_9", name: "Kindle Colorsoft Signature Edition", image: "https://m.media-amazon.com/images/I/71DVdgdBZtL._AC_UF700,800_QL80_.jpg", priceRange: "Rp5.000.000 - Rp6.000.000", buyLink: "https://s.shopee.co.id/60PgzMHVoo", specs: { ecosystem: "amazon", android: false, color: true, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "short", libby: "multiple", wirelessCharging: true, stylus: false, storage: "32GB", budget: 3, age: "new" } },
+            { id: "d_10", name: "Kindle Paperwhite Kids", image: "https://m.media-amazon.com/images/I/710ZbKFcC5L._AC_UF1000,1000_QL80_.jpg", priceRange: "Rp2.000.000 - Rp3.000.000", buyLink: "undefined", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "bigger", battery: "long", libby: "multiple", wirelessCharging: false, stylus: false, storage: "16GB", budget: 2, age: "mid" } },
+            { id: "d_11", name: "Kobo Clara BW", image: "https://m.media-amazon.com/images/I/61COzsfwaUL.jpg", priceRange: "Rp2.000.000 - Rp3.300.000", buyLink: "https://s.shopee.co.id/3B5VcFQYvI", specs: { ecosystem: "kobo", android: false, color: false, buttons: false, waterproof: true, warmLight: true, size: "compact", battery: "mid", libby: "one", wirelessCharging: false, stylus: false, storage: "16GB", budget: 2, age: "new" } },
+            { id: "d_12", name: "Kobo Clara Colour", image: "https://m.media-amazon.com/images/I/71WXIbM44gL.jpg", priceRange: "Rp2.600.000 - Rp3.800.000", buyLink: "https://s.shopee.co.id/2LWOcgdTnv", specs: { ecosystem: "kobo", android: false, color: true, buttons: false, waterproof: true, warmLight: true, size: "compact", battery: "short", libby: "one", wirelessCharging: false, stylus: false, storage: "16GB", budget: 3, age: "new" } },
+            { id: "d_13", name: "Kobo Libra Colour", image: "https://www.pbtech.co.nz/imgprod/T/A/TABKOB42802.jpg?h=510259536", priceRange: "Rp4.000.000 - Rp5.200.000", buyLink: "https://s.shopee.co.id/6L2XO6EaqB", specs: { ecosystem: "kobo", android: false, color: true, buttons: true, waterproof: true, warmLight: true, size: "bigger", battery: "short", libby: "one", wirelessCharging: false, stylus: true, storage: "32GB", budget: 3, extra: "Google Drive & Dropbox integration", age: "new" } },
+            { id: "d_14", name: "BOOX Go 6 (Gen 2)", image: "https://euroshop.boox.com/cdn/shop/files/20260608-180657.jpg?v=1780913629", priceRange: "Rp2.500.000 - Rp3.000.000", buyLink: "https://s.shopee.co.id/3B5VcNxpo7", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: true, storage: "32GB", budget: 3, age: "new" } },
+            { id: "d_15", name: "BOOX Go 7 Color", image: "https://m.media-amazon.com/images/I/61eag2NcnAL.jpg", priceRange: "Rp4.500.000 - Rp5.700.000", buyLink: "https://s.shopee.co.id/1qa8228sFN", specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "64GB", budget: 3, age: "new" } },
+            { id: "d_16", name: "BOOX Go 7 BW", image: "https://img.myshopline.com/image/store/1669199018402/03-5.jpeg?w=1000&h=1000", priceRange: "Rp4.000.000 - Rp4.700.000", buyLink: "https://s.shopee.co.id/9pcPYkw1ey", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "64GB", budget: 3, age: "new" } },
+            { id: "d_17", name: "BOOX Poke 5", image: "https://sc04.alicdn.com/kf/H285d0f1819c0469595b280c04eee28e85.jpg", priceRange: "Rp2.000.000 - Rp3.000.000", buyLink: "undefined", specs: { ecosystem: "android", android: true, color: false, buttons: false, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB", budget: 2, age: "mid" } },
+            { id: "d_18", name: "BOOX Poke 4 Lite", image: "https://shop.boox.com/cdn/shop/products/1_73786023-d98b-47ba-821f-ee0b618bc69a.jpg?v=1665209995", priceRange: "Rp1.500.000 - Rp2.400.000", buyLink: "undefined", specs: { ecosystem: "android", android: true, color: false, buttons: false, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "16GB", budget: 1, age: "old" } },
+            { id: "d_19", name: "Meebook M6C", image: "https://i.ebayimg.com/images/g/oOMAAOSwTe1mer0x/s-l1200.png", priceRange: "Rp2.000.000 - Rp3.000.000", buyLink: "https://s.shopee.co.id/LlKFddJYR", specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB", budget: 2, age: "new" } },
+            { id: "d_20", name: "Meebook M7", image: "https://m.media-amazon.com/images/I/81SzVOZXmYL._AC_SL1500_.jpg", priceRange: "Rp3.000.000 - Rp4.000.000", buyLink: "https://s.shopee.co.id/4Ay2ojSSUy", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB", budget: 2, age: "mid" } },
+            { id: "d_21", name: "Bigme B751C", image: "https://m.media-amazon.com/images/I/61J3OwOa9vL.jpg", priceRange: "Rp4.000.000 - Rp5.500.000", buyLink: "https://s.shopee.co.id/18Tr9tm7M", specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: true, storage: "64GB", budget: 3, age: "new" } },
+            { id: "d_22", name: "Bigme B6 BW", image: "https://m.media-amazon.com/images/I/61RXFMyTzQL.jpg", priceRange: "Rp2.000.000 - Rp3.300.000", buyLink: "https://s.shopee.co.id/5q6GnvaY8v", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB, 64GB", budget: 3, age: "mid" } },
+            { id: "d_23", name: "Bigme B6 Color", image: "https://m.media-amazon.com/images/I/618R7hBZ5bL.jpg", priceRange: "Rp2.800.000 - Rp3.300.000", buyLink: "https://s.shopee.co.id/5q6GnvaY8v", specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB, 64GB", budget: 3, age: "mid" } },
+            { id: "d_24", name: "BOOX Leaf2", image: "https://images.71media.pl/566/maxi/onyx-boox-leaf-2-black-front.jpg", priceRange: "Rp2.500.000 - Rp3.500.000", buyLink: "undefined", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB", budget: 2, age: "old" } },
+            { id: "d_25", name: "Kindle Paperwhite 7th Gen", image: "https://m.media-amazon.com/images/I/61shyF063PL._AC_UF894,1000_QL80_.jpg", priceRange: "Rp700.000 - Rp1.500.000", buyLink: "undefined", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: false, warmLight: false, size: "compact", battery: "mid", libby: "multiple", wirelessCharging: false, stylus: false, storage: "4GB", budget: 1, age: "old" } }
         ];
 
+        // Ensure array ordering matches exactly what user requested
         const needQuestions = [
+            { id: 'need_visual', q: { en: 'Are you currently reading ebooks from another device?', id: 'Apakah kamu saat ini membaca ebook dari perangkat lain?' }, options: [ { label: { en: 'Yes, mostly phone/tablet', id: 'Ya, biasanya HP/tablet' }, value: -2 }, { label: { en: 'No, I only read physical books', id: 'Tidak, aku cuma baca buku fisik' }, value: 1 } ] },
             { id: 'eye_strain', q: { en: 'Do your eyes easily get tired or dry when reading on a phone or tablet?', id: 'Apakah matamu mudah lelah atau kering saat membaca di HP/tablet?' }, options: [ { label: { en: 'Yes, quite often', id: 'Ya, lumayan sering' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
             { id: 'distraction', q: { en: 'Do you often get distracted by notifications when you intended to read?', id: 'Apakah kamu sering terdistraksi notifikasi saat ingin membaca?' }, options: [ { label: { en: 'Yes, all the time', id: 'Ya, sering banget' }, value: 2 }, { label: { en: 'Occasionally', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
-            { id: 'storage', q: { en: 'How is your physical book storage situation at home?', id: 'Bagaimana kondisi ruang penyimpanan buku fisikmu di rumah?' }, options: [ { label: { en: 'Overflowing', id: 'Penuh banget' }, value: 2 }, { label: { en: 'Getting tight', id: 'Mulai penuh' }, value: 1 }, { label: { en: 'Plenty of space', id: 'Masih banyak ruang' }, value: 0 } ] },
             { id: 'night_reading', q: { en: 'Do you like to read before bed but worry about the lamp waking others?', id: 'Apakah kamu suka baca sebelum tidur tapi khawatir lampu mengganggu orang lain?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'I sleep alone, but prefer dark', id: 'Tidur sendiri, tapi suka gelap' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
             { id: 'travel', q: { en: 'Do you read while commuting or traveling?', id: 'Apakah kamu sering membaca saat bepergian/komuter?' }, options: [ { label: { en: 'Yes, very often', id: 'Ya, sering sekali' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'Rarely', id: 'Jarang' }, value: 0 } ] },
             { id: 'weight', q: { en: 'Do you find thick physical books too heavy to hold for long?', id: 'Apakah buku fisik tebal terasa terlalu berat dipegang lama?' }, options: [ { label: { en: 'Yes, very heavy', id: 'Ya, sangat berat' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
-            { id: 'screen_time', q: { en: 'Do you already look at LCD screens all day for work/school?', id: 'Apakah kamu sudah melihat layar LCD seharian untuk kerja/sekolah?' }, options: [ { label: { en: 'Yes, 8+ hours', id: 'Ya, 8+ jam' }, value: 2 }, { label: { en: 'Moderate amount', id: 'Lumayan' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
-            { id: 'read_more', q: { en: 'Are you trying to build a habit of reading more?', id: 'Apakah kamu sedang mencoba membangun kebiasaan membaca lebih banyak?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'I already read a lot', id: 'Aku sudah sering baca' }, value: 1 }, { label: { en: 'Not really', id: 'Tidak juga' }, value: 0 } ] },
-            { id: 'multitasking', q: { en: 'Do you like looking up words in the dictionary instantly while reading?', id: 'Apakah kamu suka mencari arti kata di kamus secara instan saat baca?' }, options: [ { label: { en: 'Yes, often', id: 'Ya, sering' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
-            { id: 'lighting', q: { en: 'Do you often find yourself reading in poorly lit environments?', id: 'Apakah kamu sering membaca di tempat yang kurang cahaya?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No, always good light', id: 'Tidak, selalu terang' }, value: 0 } ] },
-            { id: 'instant_access', q: { en: 'Do you hate waiting for book deliveries?', id: 'Apakah kamu malas menunggu pengiriman buku fisik?' }, options: [ { label: { en: 'Yes, I want it instantly', id: 'Ya, aku mau instan' }, value: 2 }, { label: { en: 'I can wait', id: 'Aku bisa nunggu' }, value: 1 }, { label: { en: 'I enjoy bookstores', id: 'Aku suka ke toko buku' }, value: 0 } ] },
             { id: 'privacy', q: { en: 'Do you read books with embarrassing covers in public?', id: 'Apakah kamu membaca buku dengan sampul yang kurang nyaman dilihat orang lain di tempat umum?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
+            { id: 'battery_anxiety', q: { en: 'Do you get anxious when your tablet/phone battery drops while reading?', id: 'Apakah kamu cemas kalau baterai HP/tablet turun saat membaca?' }, options: [ { label: { en: 'Yes, all the time', id: 'Ya, selalu' }, value: 2 }, { label: { en: 'A little bit', id: 'Sedikit' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
+            { id: 'screen_time', q: { en: 'Do you already look at LCD screens all day for work/school?', id: 'Apakah kamu sudah melihat layar LCD seharian untuk kerja/sekolah?' }, options: [ { label: { en: 'Yes, 8+ hours', id: 'Ya, 8+ jam' }, value: 2 }, { label: { en: 'Moderate amount', id: 'Lumayan' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
+            { id: 'lighting', q: { en: 'Do you often find yourself reading in poorly lit environments?', id: 'Apakah kamu sering membaca di tempat yang kurang cahaya?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No, always good light', id: 'Tidak, selalu terang' }, value: 0 } ] },
+            { id: 'multitasking', q: { en: 'Do you like looking up words in the dictionary instantly while reading?', id: 'Apakah kamu suka mencari arti kata di kamus secara instan saat baca?' }, options: [ { label: { en: 'Yes, often', id: 'Ya, sering' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
             { id: 'font_size', q: { en: 'Do you ever wish you could make the text in a physical book larger?', id: 'Pernahkah kamu berharap bisa memperbesar teks di buku fisik?' }, options: [ { label: { en: 'Yes, frequently', id: 'Ya, sering' }, value: 2 }, { label: { en: 'Occasionally', id: 'Sesekali' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
+            { id: 'read_more', q: { en: 'Are you trying to build a habit of reading more?', id: 'Apakah kamu sedang mencoba membangun kebiasaan membaca lebih banyak?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'I already read a lot', id: 'Aku sudah sering baca' }, value: 1 }, { label: { en: 'Not really', id: 'Tidak juga' }, value: 0 } ] },
+            { id: 'need_frequency', q: { en: 'How often do you usually read a book?', id: 'Seberapa sering kamu biasanya membaca buku?' }, options: [ { label: { en: 'Less than one book a month', id: 'Kurang dari satu buku sebulan' }, value: -2 }, { label: { en: 'A few books a month', id: 'Beberapa buku sebulan' }, value: 1 }, { label: { en: 'I read constantly', id: 'Aku baca terus-menerus' }, value: 2 } ] },
             { id: 'highlights', q: { en: 'Do you like highlighting quotes without ruining a physical book?', id: 'Apakah kamu suka menandai kutipan tanpa merusak buku fisik?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'I use sticky notes', id: 'Aku pakai sticky notes' }, value: 1 }, { label: { en: 'I do not highlight', id: 'Aku tidak menandai' }, value: 0 } ] },
-            { id: 'battery_anxiety', q: { en: 'Do you get anxious when your tablet/phone battery drops while reading?', id: 'Apakah kamu cemas kalau baterai HP/tablet turun saat membaca?' }, options: [ { label: { en: 'Yes, all the time', id: 'Ya, selalu' }, value: 2 }, { label: { en: 'A little bit', id: 'Sedikit' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] }
+            { id: 'need_smell', q: { en: 'Do you absolutely love the smell and feel of physical paper?', id: 'Apakah kamu sangat menyukai aroma dan sensasi kertas fisik?' }, options: [ { label: { en: 'Yes, I can not read without it', id: 'Ya, nggak bisa baca tanpanya' }, value: -2 }, { label: { en: 'It is nice, but not essential', id: 'Suka, tapi nggak wajib' }, value: 1 }, { label: { en: 'I do not care about it', id: 'Biasa saja' }, value: 2 } ] },
+            { id: 'need_secondhand', q: { en: 'Do you usually buy very cheap secondhand physical books to save money?', id: 'Apakah kamu biasanya beli buku fisik bekas yang sangat murah untuk hemat?' }, options: [ { label: { en: 'Yes, that is how I read', id: 'Ya, begitulah cara aku baca' }, value: -2 }, { label: { en: 'No, I buy new or use libraries', id: 'Tidak, aku beli baru atau ke perpus' }, value: 1 } ] },
+            { id: 'storage', q: { en: 'How is your physical book storage situation at home?', id: 'Bagaimana kondisi ruang penyimpanan buku fisikmu di rumah?' }, options: [ { label: { en: 'Overflowing', id: 'Penuh banget' }, value: 2 }, { label: { en: 'Getting tight', id: 'Mulai penuh' }, value: 1 }, { label: { en: 'Plenty of space', id: 'Masih banyak ruang' }, value: 0 } ] },
+            { id: 'need_buying', q: { en: 'Do you buy more than 5 physical books every month?', id: 'Apakah kamu beli lebih dari 5 buku fisik setiap bulan?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'No, rarely', id: 'Tidak, jarang' }, value: -2 } ] },
+            { id: 'need_editions', q: { en: 'Do you love collecting special or beautiful physical editions of books?', id: 'Apakah kamu suka mengoleksi edisi fisik buku yang spesial/cantik?' }, options: [ { label: { en: 'Yes, I am a collector', id: 'Ya, aku kolektor' }, value: -2 }, { label: { en: 'No, I just care about the story', id: 'Tidak, yang penting ceritanya' }, value: 1 } ] },
+            { id: 'instant_access', q: { en: 'Do you hate waiting for book deliveries?', id: 'Apakah kamu malas menunggu pengiriman buku fisik?' }, options: [ { label: { en: 'Yes, I want it instantly', id: 'Ya, aku mau instan' }, value: 2 }, { label: { en: 'I can wait', id: 'Aku bisa nunggu' }, value: 1 }, { label: { en: 'I enjoy bookstores', id: 'Aku suka ke toko buku' }, value: 0 } ] },
+            { id: 'need_library', q: { en: 'Are you planning to build a physical library or huge bookshelf in your house?', id: 'Apakah kamu berencana membuat perpustakaan atau rak buku besar di rumah?' }, options: [ { label: { en: 'Yes, that is my dream!', id: 'Ya, itu mimpiku!' }, value: -2 }, { label: { en: 'No, I prefer minimalism', id: 'Tidak, lebih suka minimalis' }, value: 2 } ] },
+            { id: 'need_lend', q: { en: 'Do you often lend your books to friends?', id: 'Apakah kamu sering meminjamkan buku ke teman?' }, options: [ { label: { en: 'Yes, frequently', id: 'Ya, sering' }, value: -2 }, { label: { en: 'No, they are just for me', id: 'Tidak, cuma buat aku' }, value: 1 } ] },
+            { id: 'need_budget', q: { en: 'Do you have the budget that you can prioritize for getting an e-reader?', id: 'Apakah kamu punya budget yang bisa diprioritaskan untuk membeli e-reader?' }, options: [ { label: { en: 'Yes, I have it ready', id: 'Ya, sudah siap' }, value: 2 }, { label: { en: 'I am still saving up / limited budget', id: 'Masih nabung / terbatas' }, value: -2 } ] },
+            { id: 'need_hobbies', q: { en: 'Do you prefer spending your extra money on other hobbies instead of reading gadgets?', id: 'Apakah kamu lebih suka menghabiskan uang untuk hobi lain daripada gadget baca?' }, options: [ { label: { en: 'Yes, definitely', id: 'Ya, pasti' }, value: -2 }, { label: { en: 'No, reading is my main priority', id: 'Tidak, membaca itu prioritasku' }, value: 2 } ] }
         ];
 
         const questions = [
-            { id: 'source', q: { en: 'Where do most of your books come from?', id: 'Dari mana kebanyakan sumber bukumu?' }, options: [ 
-                { label: { en: 'Amazon Kindle Store', id: 'Toko Amazon Kindle' }, value: 'amazon' }, 
-                { label: { en: 'Kobo Store', id: 'Toko Kobo' }, value: 'kobo' }, 
-                { label: { en: 'Indonesian local apps & Google Play Books', id: 'Aplikasi lokal Indonesia & Google Play Books' }, value: 'android' }, 
-                { label: { en: 'Libby / Overdrive', id: 'Libby / Overdrive' }, value: 'libby' }, 
-                { label: { en: 'EPUB/PDF files (Sideload)', id: 'File EPUB/PDF (Sideload)' }, value: 'sideload' }, 
-                { label: { en: 'Mixed sources', id: 'Campuran' }, value: 'mixed' } 
-            ] },
-            { id: 'content', q: { en: 'What will you mostly read?', id: 'Apa yang paling sering kamu baca?' }, options: [ { label: { en: 'Novels', id: 'Novel' }, value: 'text' }, { label: { en: 'Manga / Comics', id: 'Manga / Komik' }, value: 'manga_comic' }, { label: { en: 'Textbooks', id: 'Buku Pelajaran' }, value: 'pdf' }, { label: { en: 'Mixed', id: 'Campuran' }, value: 'mixed' } ] },
+            { id: 'source', q: { en: 'Where do most of your books come from?', id: 'Dari mana kebanyakan sumber bukumu?' }, options: [ { label: { en: 'Amazon Kindle Store', id: 'Toko Amazon Kindle' }, value: 'amazon' }, { label: { en: 'Kobo Store', id: 'Toko Kobo' }, value: 'kobo' }, { label: { en: 'Indonesian local apps', id: 'Aplikasi lokal Indonesia' }, value: 'android' }, { label: { en: 'Libby / Overdrive', id: 'Libby / Overdrive' }, value: 'libby' }, { label: { en: 'EPUB/PDF files (Sideload)', id: 'File EPUB/PDF (Sideload)' }, value: 'sideload' }, { label: { en: 'Mixed sources', id: 'Campuran' }, value: 'mixed' } ] },
+            { id: 'content', q: { en: 'What will you mostly read?', id: 'Apa yang paling sering kamu baca?' }, options: [ { label: { en: 'Novels', id: 'Novel' }, value: 'text' }, { label: { en: 'Manga / Comics / Graphic Novels', id: 'Manga / Komik / Novel Grafis' }, value: 'manga_comic' }, { label: { en: 'Textbooks', id: 'Buku Pelajaran' }, value: 'pdf' }, { label: { en: 'Mixed', id: 'Campuran' }, value: 'mixed' } ] },
             { id: 'reading_time', q: { en: 'How much time do you spend reading in a day?', id: 'Berapa lama waktu yang kamu habiskan untuk membaca dalam sehari?' }, options: [ { label: { en: 'Around 30 minutes', id: 'Sekitar 30 menit' }, value: 'short' }, { label: { en: '1 to 3 hours', id: '1 hingga 3 jam' }, value: 'mid' }, { label: { en: 'More than 3 hours!', id: 'Lebih dari 3 jam!' }, value: 'long' } ] },
             { id: 'waterproof', q: { en: 'How important is waterproofing?', id: 'Seberapa penting fitur <i>waterproof</i>?' }, options: [ { label: { en: 'Essential', id: 'Sangat penting' }, value: 'essential' }, { label: { en: 'Nice to have', id: 'Bagus kalau ada' }, value: 'nice' }, { label: { en: 'Do not care', id: 'Tidak peduli' }, value: 'none' } ] },
             { id: 'size', q: { en: 'What size do you prefer?', id: 'Ukuran seperti apa yang kamu lebih suka?' }, options: [ { label: { en: 'Compact and lightweight', id: 'Ringkas dan ringan' }, value: 'compact' }, { label: { en: 'A more comfortable, book-like size', id: 'Lebih nyaman, mirip ukuran buku asli' }, value: 'bigger' } ] },
             { id: 'buttons', q: { en: 'Which sounds more comfortable?', id: 'Mana yang terdengar lebih nyaman?' }, options: [ { label: { en: 'Touchscreen', id: 'Layar sentuh' }, value: 'touch' }, { label: { en: 'Physical buttons', id: 'Tombol fisik' }, value: 'buttons' }, { label: { en: 'Either', id: 'Keduanya' }, value: 'either' } ] },
+            { id: 'sync', q: { en: 'Would you like your reading progress to sync across other devices (phone, tablet)?', id: 'Apakah kamu ingin progres bacamu sinkron di perangkat lain (HP, tablet)?' }, options: [ { label: { en: 'Yes, I will be reading on my other devices', id: 'Ya, saya akan membaca di perangkat lain juga' }, value: 'yes' }, { label: { en: 'No, I will only read from this device', id: 'Tidak, saya hanya akan membaca dari perangkat ini' }, value: 'no' } ] },
             { id: 'library', q: { en: 'Do you use digital public libraries (like Libby)?', id: 'Apakah kamu menggunakan perpustakaan publik digital (seperti Libby)?' }, options: [ { label: { en: 'No, I don\'t', id: 'Tidak' }, value: 'never' }, { label: { en: 'Yes, only one library', id: 'Ya, hanya satu perpustakaan' }, value: 'one' }, { label: { en: 'Yes, multiple libraries', id: 'Ya, banyak perpustakaan' }, value: 'multiple' } ] },
             { id: 'notes', q: { en: 'Would you like to take handwritten notes?', id: 'Apakah kamu ingin membuat catatan tulisan tangan?' }, options: [ { label: { en: 'Yes, I use it for notetaking', id: 'Ya, saya pakai untuk mencatat' }, value: 'yes' }, { label: { en: 'No, I just want to read', id: 'Tidak, saya cuma mau baca' }, value: 'no' } ] },
             { id: 'wireless', q: { en: 'Do you mainly use wireless charging?', id: 'Apakah kamu sering menggunakan pengisian daya nirkabel?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 'yes' }, { label: { en: 'No', id: 'Tidak' }, value: 'no' } ] },
             { id: 'tracker', q: { en: 'Do you use a reading tracker app?', id: 'Apakah kamu menggunakan aplikasi pelacak bacaan?' }, options: [ { label: { en: 'Yes, I use Goodreads', id: 'Ya, saya pakai Goodreads' }, value: 'goodreads' }, { label: { en: 'Yes, I use Storygraph', id: 'Ya, saya pakai Storygraph' }, value: 'storygraph' }, { label: { en: 'Yes, I use other apps', id: 'Ya, saya pakai aplikasi lain' }, value: 'other' }, { label: { en: 'No', id: 'Tidak' }, value: 'no' } ] },
-            { id: 'device_age', q: { en: 'Are you okay with older devices that might need extra tweaking/jailbreaks?', id: 'Apakah kamu oke dengan perangkat lama yang mungkin butuh di-tweak/jailbreak?' }, options: [ { label: { en: 'Yes, I don\'t mind tinkering', id: 'Ya, saya tidak keberatan ngulik' }, value: 'old' }, { label: { en: 'No, I prefer newly released devices', id: 'Tidak, saya lebih suka perangkat keluaran baru' }, value: 'new' }, { label: { en: 'I don\'t really care', id: 'Saya tidak terlalu peduli' }, value: 'any' } ] },
+            { id: 'device_age', q: { en: 'Are you okay with older devices that might need extra tweaking/jailbreaks?', id: 'Apakah kamu oke dengan perangkat lama yang mungkin butuh di-tweak/jailbreak?' }, options: [ { label: { en: 'Yes, I don\'t mind', id: 'Ya, saya tidak keberatan' }, value: 'old' }, { label: { en: 'No, I prefer newly released devices', id: 'Tidak, saya lebih suka perangkat keluaran baru' }, value: 'new' }, { label: { en: 'I don\'t really care', id: 'Saya tidak terlalu peduli' }, value: 'any' } ] },
             { id: 'budget', q: { en: 'What is your budget limit?', id: 'Berapa batas anggaranmu?' }, options: [ { label: { en: 'Under Rp 2.000.000', id: 'Di bawah Rp 2.000.000' }, value: 1 }, { label: { en: 'Rp 2.000.000 - Rp 3.500.000', id: 'Rp 2.000.000 - Rp 3.500.000' }, value: 2 }, { label: { en: 'Above Rp 3.500.000', id: 'Di atas Rp 3.500.000' }, value: 3 } ] }
         ];
 
@@ -480,8 +498,6 @@
         }
 
         function calculateMatches() {
-            const loc = (en, id) => state.lang === 'en' ? en : id;
-            
             let scores = ereaders.map(device => {
                 let score = 0; 
                 let maxPossible = 0;
@@ -498,84 +514,91 @@
                     }
                 };
 
-                // Apply inherent ecosystem traits early for strong differentiation
-                if (device.specs.ecosystem === 'amazon') {
-                    reasons.push(loc("Sideloaded books sync progress across Kindle apps", "Buku sideload sinkron progresnya di aplikasi Kindle"));
-                    if (device.specs.age === 'old') {
-                        drawbacks.push(loc("Older model; might need jailbreaking for certain features", "Model lama; mungkin butuh jailbreak untuk fitur tertentu"));
-                    }
-                }
-                if (device.specs.ecosystem === 'kobo') {
-                    drawbacks.push(loc("Sideloaded books do not sync progress across Kobo apps", "Buku sideload tidak sinkron progresnya di aplikasi Kobo"));
-                }
-
                 // 1. Source Ecosystem
-                if (state.answers.source === 'amazon') evaluate(25, device.specs.ecosystem === 'amazon', loc("Seamless Amazon Store integration", "Integrasi mulus dengan Toko Amazon"), loc("Buying Amazon books requires extra steps", "Beli buku Amazon butuh langkah ekstra"));
-                else if (state.answers.source === 'kobo') evaluate(25, device.specs.ecosystem === 'kobo', loc("Seamless Kobo Store integration", "Integrasi mulus dengan Toko Kobo"), loc("Buying Kobo books requires extra steps", "Beli buku Kobo butuh langkah ekstra"));
-                else if (state.answers.source === 'android') evaluate(25, device.specs.android === true, loc("Full access to local apps & Google Play", "Akses penuh ke aplikasi lokal & Google Play"), loc("Cannot install local reading apps natively", "Tidak bisa instal aplikasi baca lokal secara bawaan"));
-                else if (state.answers.source === 'libby') evaluate(15, device.specs.ecosystem === 'kobo' || device.specs.android, loc("Good Libby integration capabilities", "Integrasi Libby yang bagus"), loc("Amazon outside US doesn't support Libby easily", "Amazon di luar AS sulit memakai Libby"));
-                else if (state.answers.source === 'sideload') evaluate(20, device.specs.ecosystem === 'android' || device.specs.ecosystem === 'kobo' || device.specs.ecosystem === 'amazon', loc("Easy to sideload and sync EPUBs", "Mudah untuk sideload dan sinkronisasi EPUB"), null);
-                else if (state.answers.source === 'mixed') evaluate(25, device.specs.android === true, loc("Supports all your mixed sources natively", "Mendukung semua sumber bacaan campuranmu secara bawaan"), loc("Might not support local apps & Google Play Books natively", "Mungkin tidak mendukung aplikasi lokal & Google Play Books bawaan"));
+                if (state.answers.source === 'amazon') evaluate(25, device.specs.ecosystem === 'amazon', "Seamless Amazon Store integration", "Buying Amazon books requires extra steps");
+                else if (state.answers.source === 'kobo') evaluate(25, device.specs.ecosystem === 'kobo', "Seamless Kobo Store integration", "Buying Kobo books requires extra steps");
+                else if (state.answers.source === 'android') evaluate(25, device.specs.android === true, "Full access to local Android apps", "Cannot install local Android reading apps natively");
+                else if (state.answers.source === 'libby') evaluate(15, device.specs.ecosystem === 'kobo' || device.specs.android, "Good Libby integration capabilities", null);
+                else if (state.answers.source === 'sideload') evaluate(20, device.specs.ecosystem === 'android' || device.specs.ecosystem === 'kobo' || device.specs.ecosystem === 'amazon', "Easy to sideload and sync EPUBs", null);
+                else if (state.answers.source === 'mixed') evaluate(25, device.specs.android === true, "Android allows access to multiple stores and formats", "Locked into a specific brand ecosystem so you cannot install local apps");
 
                 // 2. Content / Color
-                if (state.answers.content === 'color') evaluate(20, device.specs.color === true, loc("Color screen for comics and covers", "Layar warna untuk komik dan sampul"), loc("Black and white screen only", "Hanya layar hitam putih"));
-                else if (state.answers.content === 'manga_comic') {
-                    evaluate(15, device.specs.size === 'bigger', loc("Larger screen ideal for formatting", "Layar besar ideal untuk format komik"), loc("Screen might be too small for complex layouts", "Layar mungkin terlalu kecil untuk layout kompleks"));
-                    if (device.specs.color) evaluate(5, true, loc("Color brings covers to life", "Layar warna menghidupkan sampul"), null);
-                } 
-                else if (state.answers.content === 'pdf') evaluate(15, device.specs.size === 'bigger', loc("Larger screen ideal for PDFs", "Layar besar ideal untuk PDF"), loc("Screen might be too small for complex layouts", "Layar mungkin terlalu kecil untuk layout kompleks"));
-                else if (state.answers.content === 'text') {
+                if (state.answers.content === 'manga_comic' || state.answers.content === 'mixed') {
+                    evaluate(15, device.specs.size === 'bigger', "Larger screen ideal for formatting and graphics", null);
+                    if (device.specs.size === 'compact') drawbacks.push("Compact size might be too small for complex graphics");
+                    
                     if (device.specs.color) {
-                        evaluate(10, false, null, loc("Color screens use lower PPI, making pure text darker and less crisp", "Layar warna memakai PPI lebih rendah, teks biasa sedikit lebih gelap dan kurang tajam"));
+                        evaluate(15, true, "Color screen brings graphics and covers to life", null);
                     } else {
-                        evaluate(10, true, loc("Sharper contrast with standard B&W screen", "Kontras lebih tajam dengan layar B&W standar"), null);
+                        drawbacks.push("Not the most suitable for colored manga & graphic novels");
                     }
+                } 
+                else if (state.answers.content === 'pdf') evaluate(15, device.specs.size === 'bigger', "Larger screen ideal for formatting", "Screen might be too small for complex layouts");
+                else if (state.answers.content === 'text') {
+                    evaluate(15, !device.specs.color, "Sharper contrast with standard B&W screen", null);
+                    if (device.specs.color) drawbacks.push("Color screens use a lower PPI layer making it slightly darker/less sharp for pure text");
                 }
 
                 // 3. Size Preference
-                if (state.answers.size === 'compact') evaluate(15, device.specs.size === 'compact', loc("Compact and lightweight design", "Desain ringkas dan ringan"), loc("Larger and heavier than preferred", "Lebih besar dan berat dari yang diinginkan"));
-                else if (state.answers.size === 'bigger') evaluate(15, device.specs.size === 'bigger', loc("Comfortable, book-like reading area", "Area baca nyaman dan luas seperti buku"), loc("Smaller screen than requested", "Layar lebih kecil dari yang diminta"));
+                if (state.answers.size === 'compact') evaluate(15, device.specs.size === 'compact', "Compact and lightweight design", "Larger than preferred");
+                else if (state.answers.size === 'bigger') evaluate(15, device.specs.size === 'bigger', "Comfortable, book-like reading area", "Smaller screen than requested");
 
                 // 4. Waterproofing
-                if (state.answers.waterproof === 'essential') evaluate(15, device.specs.waterproof === true, loc("Fully waterproof for reading anywhere", "Sepenuhnya anti-air, baca di mana saja"), loc("Not waterproof", "Tidak anti-air"));
+                if (state.answers.waterproof === 'essential') evaluate(15, device.specs.waterproof === true, "Fully waterproof for reading anywhere", "Not waterproof");
                 else if (state.answers.waterproof === 'nice') {
-                    if (device.specs.waterproof) evaluate(5, true, loc("Has bonus waterproofing", "Punya bonus fitur anti-air"), null);
+                    if (device.specs.waterproof) evaluate(5, true, "Has bonus waterproofing", null);
                 }
 
                 // 5. Buttons
-                if (state.answers.buttons === 'buttons') evaluate(10, device.specs.buttons === true, loc("Has physical page-turn buttons", "Punya tombol fisik pindah halaman"), loc("Lacks physical buttons", "Tidak ada tombol fisik"));
-                else if (state.answers.buttons === 'touch') evaluate(10, device.specs.buttons === false, loc("Streamlined touchscreen-only design", "Desain layar sentuh ramping"), null);
+                if (state.answers.buttons === 'buttons') evaluate(40, device.specs.buttons === true, "Has physical page-turn buttons", "Lacks physical buttons");
+                else if (state.answers.buttons === 'touch') evaluate(40, device.specs.buttons === false, "Streamlined touchscreen-only design", "Has physical buttons which you didn't prefer");
+
+                // Sync across devices
+                if (state.answers.sync === 'yes') {
+                    if (device.specs.ecosystem === 'amazon') {
+                        evaluate(15, true, "Progress syncs perfectly across Kindle apps (even for sideloaded books)", null);
+                    } else if (device.specs.ecosystem === 'kobo') {
+                        evaluate(15, false, null, "Sideloaded books do NOT sync progress across the Kobo app");
+                    } else if (device.specs.android) {
+                        evaluate(10, true, "Can use multiple apps that support cloud syncing", null);
+                    }
+                }
 
                 // 6. Library/Libby
-                if (state.answers.library === 'one') evaluate(15, device.specs.libby === 'one' || device.specs.android || device.specs.libby === 'multiple', loc("Supports your library needs", "Mendukung kebutuhan perpustakaanmu"), loc("Might not support Libby directly", "Mungkin tidak mendukung Libby langsung"));
-                else if (state.answers.library === 'multiple') evaluate(15, device.specs.android || device.specs.ecosystem === 'amazon', loc("Can handle multiple library sources/cards", "Bisa menangani banyak kartu perpustakaan"), loc("Kobo natively only supports one active Libby card", "Kobo bawaan hanya mendukung satu kartu Libby aktif"));
+                if (state.answers.library === 'one') evaluate(15, device.specs.libby === 'one' || device.specs.android || device.specs.libby === 'multiple', "Supports your library needs", "Might not support Libby directly");
+                else if (state.answers.library === 'multiple') evaluate(15, device.specs.android || device.specs.ecosystem === 'amazon', "Can handle multiple library sources/cards", "Kobo natively only supports one active Libby card");
 
                 // 7. Stylus / Notes
-                if (state.answers.notes === 'yes') evaluate(15, device.specs.stylus === true, loc("Supports stylus input for handwritten notes", "Mendukung stylus untuk catatan tangan"), loc("Cannot take handwritten notes", "Tidak bisa membuat catatan tangan"));
+                if (state.answers.notes === 'yes') evaluate(15, device.specs.stylus === true, "Supports stylus input for handwritten notes", "Cannot take handwritten notes");
 
                 // 8. Wireless Charging
-                if (state.answers.wireless === 'yes') evaluate(5, device.specs.wirelessCharging === true, loc("Supports convenient wireless charging", "Mendukung wireless charging yang praktis"), loc("Requires a cable to charge", "Butuh kabel untuk mengisi daya"));
+                if (state.answers.wireless === 'yes') evaluate(5, device.specs.wirelessCharging === true, "Supports convenient wireless charging", "Requires a cable to charge");
                 
                 // 10. Reading Time (Battery)
-                if (state.answers.reading_time === 'long') evaluate(15, device.specs.battery === 'long', loc("Excellent battery life for long sessions", "Daya tahan baterai luar biasa untuk baca lama"), loc("Battery might need more frequent charging", "Baterai mungkin butuh lebih sering dicas"));
+                if (state.answers.reading_time === 'long') evaluate(15, device.specs.battery === 'long', "Excellent battery life for long sessions", "Battery might need more frequent charging");
                 else if (state.answers.reading_time === 'short') {
-                    if(device.specs.battery !== 'long') evaluate(5, true, loc("Sufficient battery for casual reading", "Baterai cukup untuk baca santai"), null);
+                    if(device.specs.battery !== 'long') evaluate(5, true, "Sufficient battery for casual reading", null);
                 }
 
                 // 11. Tracker Logic
                 if (state.answers.tracker === 'goodreads') {
-                    evaluate(10, device.specs.ecosystem === 'amazon' || device.specs.android, loc("Goodreads integration supported", "Mendukung integrasi Goodreads"), loc("No built-in Goodreads sync", "Tidak ada sinkronisasi Goodreads bawaan"));
+                    evaluate(10, device.specs.ecosystem === 'amazon' || device.specs.android, "Goodreads integration supported", "No built-in Goodreads sync");
                 } else if (state.answers.tracker === 'storygraph') {
-                    evaluate(10, device.specs.ecosystem === 'kobo' || device.specs.android, loc("Storygraph integration supported", "Mendukung integrasi Storygraph"), loc("No built-in Storygraph sync", "Tidak ada sinkronisasi Storygraph bawaan"));
+                    evaluate(10, device.specs.ecosystem === 'kobo' || device.specs.android, "Storygraph integration supported", "No built-in Storygraph sync");
                 } else if (state.answers.tracker === 'other') {
-                    evaluate(10, device.specs.android === true, loc("Can install third-party tracking apps", "Bisa menginstal aplikasi pelacak pihak ketiga"), loc("Locked ecosystem limits tracking apps", "Ekosistem tertutup membatasi aplikasi pelacak"));
+                    evaluate(10, device.specs.android === true, "Can install third-party tracking apps", "Locked ecosystem limits tracking apps");
                 }
 
                 // Device Age Preference
                 if (state.answers.device_age === 'new') {
-                    evaluate(15, device.specs.age === 'new' || device.specs.age === 'mid', loc("Newer device, better longevity", "Perangkat lebih baru, lebih awet"), loc("Older device, might stop receiving updates soon", "Perangkat lama, mungkin segera berhenti dapat update"));
+                    evaluate(15, device.specs.age === 'new' || device.specs.age === 'mid', "Newer device, better longevity", "Older device, might stop receiving updates soon");
                 } else if (state.answers.device_age === 'old') {
-                    if (device.specs.age === 'old') evaluate(5, true, loc("Older device (easier to jailbreak if needed)", "Perangkat lama (lebih mudah dijailbreak jika butuh)"), null);
+                    if (device.specs.age === 'old') evaluate(5, true, "Older device (easier to jailbreak if needed)", null);
+                }
+
+                // Older Kindle Note
+                if (device.specs.ecosystem === 'amazon' && device.specs.age === 'old') {
+                    drawbacks.push("Older Kindle devices released pre-2020 might need jailbreaking for certain features");
                 }
 
                 // 12. Budget
@@ -583,29 +606,46 @@
                     maxPossible += 30; 
                     if (device.specs.budget <= state.answers.budget) {
                         score += 30;
-                        reasons.push(loc("Fits comfortably within your budget", "Sesuai dengan anggaranmu"));
+                        reasons.push("Fits comfortably within your budget");
                     } else {
-                        drawbacks.push(loc("Exceeds your requested budget significantly", "Jauh melebihi anggaran yang kamu minta"));
+                        drawbacks.push("Exceeds your requested budget significantly");
                     }
                 }
 
                 if (device.specs.extra && device.specs.extra.includes('Google Drive & Dropbox integration')) {
-                    reasons.push(loc("Built-in Google Drive & Dropbox integration", "Integrasi Google Drive & Dropbox bawaan"));
+                    reasons.push("Built-in Google Drive & Dropbox integration");
                 }
                 
                 let percentage = maxPossible > 0 ? Math.round((score / maxPossible) * 100) : 0;
                 percentage = Math.max(0, Math.min(100, percentage)); 
 
-                if(reasons.length === 0) reasons.push(loc("Overall solid device", "Secara keseluruhan perangkat yang bagus"));
-                if(drawbacks.length === 0) drawbacks.push(loc("No major conflicts with your preferences", "Tidak ada konflik besar dengan preferensimu"));
+                if(reasons.length === 0) reasons.push("Overall solid device");
+                if(drawbacks.length === 0) drawbacks.push("No major conflicts with your preferences");
 
                 reasons = [...new Set(reasons)].slice(0, 4);
-                drawbacks = [...new Set(drawbacks)].slice(0, 3);
+                drawbacks = [...new Set(drawbacks)].slice(0, 4);
 
                 return { ...device, score: percentage, matchReasons: reasons, matchDrawbacks: drawbacks };
             });
 
             return scores.sort((a, b) => b.score - a.score);
+        }
+
+        function handleBuyClick(link) {
+            if (link && link !== 'undefined' && link !== 'null') {
+                window.open(link, '_blank');
+            } else {
+                document.getElementById('buy-modal-text').innerText = t(ui.noLinkMsg);
+                const modal = document.getElementById('buy-modal');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeBuyModal() {
+            const modal = document.getElementById('buy-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
 
         function getFindResultHtml() {
@@ -624,12 +664,16 @@
                         <div class="absolute top-0 right-0 bg-basil text-white text-xs font-bold px-5 py-2.5 rounded-bl-3xl rounded-tr-[1.8rem] z-10 tracking-widest shadow-sm">${t(ui.bestMatch)}</div>
                         
                         <div class="w-full lg:w-1/3 shrink-0 flex flex-col items-center justify-center pt-6 lg:pt-0">
-                            <div class="relative">
-                                <img src="${topPick.image}" alt="${topPick.name}" class="w-56 h-72 sm:w-64 sm:h-80 object-contain rounded-xl p-2 sm:p-4 bg-white shadow-md border-4 border-white mx-auto">
-                                <div class="absolute -bottom-5 -right-5 bg-lightgreen border-4 border-white text-basil font-bold text-2xl rounded-full w-20 h-20 flex items-center justify-center shadow-lg">
+                            <div class="relative mb-8">
+                                <img src="${topPick.image}" alt="${topPick.name}" class="w-48 h-64 sm:w-56 sm:h-76 object-contain rounded-xl p-2 sm:p-4 bg-white shadow-md border-4 border-white mx-auto">
+                                <div class="absolute -bottom-5 -right-5 bg-lightgreen border-4 border-white text-basil font-bold text-2xl rounded-full w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center shadow-lg">
                                     ${topPick.score}%
                                 </div>
                             </div>
+                            <button onclick="handleBuyClick('${topPick.buyLink}')" class="w-full max-w-[220px] bg-darkpink hover:bg-darkpink/90 text-white font-bold py-2.5 px-6 rounded-xl flex items-center justify-center transition-colors shadow-sm">
+                                <svg class="w-5 h-5 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                                <span class="mt-[2px] leading-none">${t(ui.buyNow)}</span>
+                            </button>
                         </div>
                         
                         <div class="flex-1 flex flex-col w-full min-w-0">
@@ -662,11 +706,17 @@
                     <h3 class="text-xl font-bold text-basil mb-5 text-center sm:text-left shrink-0">${t(ui.otherOptions)}</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 shrink-0">
                         ${runnerUps.map(device => `
-                            <div class="bg-white rounded-3xl p-5 border-2 border-duckegg flex flex-col items-center text-center shadow-sm hover:shadow-md transition-all relative overflow-hidden group">
+                            <div class="bg-white rounded-3xl p-5 border-2 border-duckegg flex flex-col items-center text-center shadow-sm transition-all relative overflow-hidden group">
                                 <div class="absolute top-0 right-0 bg-hydrangea text-white text-base font-bold px-4 py-1.5 rounded-bl-2xl z-10 shadow-sm">${device.score}%</div>
-                                <img src="${device.image}" alt="${device.name}" class="w-20 h-24 object-contain rounded-xl mb-4 bg-gray-50 p-1 group-hover:scale-105 transition-transform">
+                                <img src="${device.image}" alt="${device.name}" class="w-20 h-24 object-contain rounded-xl mb-3 bg-gray-50 p-1 group-hover:scale-105 transition-transform">
                                 <h4 class="font-bold text-basil text-sm mb-1 leading-tight h-10 flex items-center">${device.name}</h4>
-                                <button onclick="openModal('${device.id}')" class="mt-4 text-sm font-bold text-basil bg-duckegg/40 hover:bg-duckegg px-4 py-2 rounded-xl transition-colors w-full">${t(ui.viewDetails)}</button>
+                                <div class="mt-auto pt-4 flex flex-col gap-2 w-full">
+                                    <button onclick="openModal('${device.id}')" class="text-sm font-bold text-basil bg-duckegg/40 hover:bg-duckegg px-4 py-2 rounded-xl transition-colors w-full">${t(ui.viewDetails)}</button>
+                                    <button onclick="handleBuyClick('${device.buyLink}')" class="text-sm font-bold text-white bg-basil hover:bg-basil/90 px-4 py-2 rounded-xl transition-colors flex items-center justify-center w-full">
+                                        <svg class="w-4 h-4 mr-1.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg> 
+                                        <span class="mt-[1px] leading-none">${t(ui.buyNow)}</span>
+                                    </button>
+                                </div>
                             </div>
                         `).join('')}
                     </div>
@@ -776,37 +826,41 @@
                     <div class="space-y-4 max-w-3xl mx-auto w-full">
                         <div class="bg-duckegg/10 border-2 border-duckegg rounded-2xl p-5 shadow-sm">
                             <h3 class="font-bold text-basil text-lg mb-2">${t(ui.faq1Q)}</h3>
-                            <p class="text-basil/80 text-sm leading-relaxed">
+                            <p class="text-basil/80 text-sm leading-relaxed text-justify">
                                 ${t(ui.faq1A)}
                             </p>
                         </div>
                         <div class="bg-duckegg/10 border-2 border-duckegg rounded-2xl p-5 shadow-sm">
                             <h3 class="font-bold text-basil text-lg mb-2">${t(ui.faq2Q)}</h3>
-                            <p class="text-basil/80 text-sm leading-relaxed">
+                            <p class="text-basil/80 text-sm leading-relaxed text-justify">
                                 ${t(ui.faq2A)}
                             </p>
                         </div>
                         <div class="bg-duckegg/10 border-2 border-duckegg rounded-2xl p-5 shadow-sm">
                             <h3 class="font-bold text-basil text-lg mb-2">${t(ui.faq3Q)}</h3>
-                            <p class="text-basil/80 text-sm leading-relaxed">${t(ui.faq3A)}</p>
+                            <p class="text-basil/80 text-sm leading-relaxed text-justify">${t(ui.faq3A)}</p>
                         </div>
                         <div class="bg-duckegg/10 border-2 border-duckegg rounded-2xl p-5 shadow-sm">
                             <h3 class="font-bold text-basil text-lg mb-2">${t(ui.faq4Q)}</h3>
-                            <p class="text-basil/80 text-sm leading-relaxed">
+                            <p class="text-basil/80 text-sm leading-relaxed text-justify">
                                 ${t(ui.faq4A)}
                             </p>
                         </div>
                         <div class="bg-duckegg/10 border-2 border-duckegg rounded-2xl p-5 shadow-sm">
                             <h3 class="font-bold text-basil text-lg mb-2">${t(ui.faq5Q)}</h3>
-                            <p class="text-basil/80 text-sm leading-relaxed">${t(ui.faq5A)}</p>
+                            <p class="text-basil/80 text-sm leading-relaxed text-justify">${t(ui.faq5A)}</p>
                         </div>
                         <div class="bg-duckegg/10 border-2 border-duckegg rounded-2xl p-5 shadow-sm">
                             <h3 class="font-bold text-basil text-lg mb-2">${t(ui.faq6Q)}</h3>
-                            <p class="text-basil/80 text-sm leading-relaxed">${t(ui.faq6A)}</p>
+                            <p class="text-basil/80 text-sm leading-relaxed text-justify">${t(ui.faq6A)}</p>
                         </div>
                         <div class="bg-duckegg/10 border-2 border-duckegg rounded-2xl p-5 shadow-sm">
                             <h3 class="font-bold text-basil text-lg mb-2">${t(ui.faq7Q)}</h3>
-                            <p class="text-basil/80 text-sm leading-relaxed">${t(ui.faq7A)}</p>
+                            <p class="text-basil/80 text-sm leading-relaxed text-justify">${t(ui.faq7A)}</p>
+                        </div>
+                        <div class="bg-duckegg/10 border-2 border-duckegg rounded-2xl p-5 shadow-sm">
+                            <h3 class="font-bold text-basil text-lg mb-2">${t(ui.faq8Q)}</h3>
+                            <p class="text-basil/80 text-sm leading-relaxed text-justify">${t(ui.faq8A)}</p>
                         </div>
                     </div>
 
@@ -816,7 +870,7 @@
                             <span class="font-bold text-xs uppercase tracking-wider whitespace-nowrap">${t(ui.surveyText)}</span>
                         </a>
                         <a href="https://forms.gle/EQDHMWbPyMFQZ4nr5" target="_blank" class="w-full sm:w-auto sm:min-w-[300px] px-6 bg-darkpink hover:bg-darkpink/90 border-2 border-transparent hover:border-duckegg rounded-2xl p-4 flex flex-row items-center justify-center transition-all group cursor-pointer text-white shadow-md">
-                            <svg class="w-6 h-6 mr-3 group-hover:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <svg class="w-6 h-6 mr-3 group-hover:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"></path></svg>
                             <span class="font-bold text-xs uppercase tracking-wider whitespace-nowrap">${t(ui.qnaText)}</span>
                         </a>
                     </div>
@@ -831,7 +885,8 @@
                     score += state.answers[key];
                 }
             }
-            const needsEreader = score >= 12; 
+            
+            const needsEreader = score >= 15; 
 
             const title = needsEreader ? ui.needYesTitle : ui.needNoTitle;
             const desc = needsEreader ? ui.needYesDesc : ui.needNoDesc;
@@ -843,6 +898,11 @@
                 ? `<svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`
                 : `<svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
             
+            let savingUpMsg = "";
+            if (needsEreader && state.answers.need_budget !== undefined && state.answers.need_budget < 0) {
+                savingUpMsg = `<p class="mt-4 text-basil font-medium text-base sm:text-lg italic">${t(ui.savingUp)}</p>`;
+            }
+
             return `
                 <div class="fade-in flex flex-col h-full py-10 items-center justify-center overflow-y-auto">
                     
@@ -852,8 +912,9 @@
                         </div>
                         <div class="flex-1 flex flex-col justify-center h-full pt-2">
                             <h2 class="text-3xl sm:text-4xl font-bold text-basil mb-4 leading-tight">${t(title)}</h2>
-                            <div class="text-basil/80 text-lg mb-8">
+                            <div class="text-basil/80 text-lg mb-6">
                                 ${t(desc)}
+                                ${savingUpMsg}
                             </div>
                             <button onclick="${btnAction}" class="font-sunshiney text-lg sm:text-xl tracking-wider bg-basil hover:bg-basil/90 text-white py-3 px-6 rounded-2xl transition-all shadow-md transform hover:-translate-y-1 inline-block w-full sm:w-auto text-center mt-auto">
                                 ${t(btnText)}
@@ -869,7 +930,6 @@
         }
 
         function openModal(deviceId) {
-            const loc = (en, id) => state.lang === 'en' ? en : id;
             const device = ereaders.find(d => d.id === deviceId);
             const modal = document.getElementById('modal');
             const content = document.getElementById('modal-content');
@@ -877,27 +937,18 @@
             let pros = [];
             let cons = [];
             
-            if(device.specs.color) pros.push(loc("Color Display", "Layar Berwarna"));
-            if(device.specs.waterproof) pros.push(loc("Waterproof", "Anti Air"));
-            if(device.specs.buttons) pros.push(loc("Physical Buttons", "Tombol Fisik"));
-            if(device.specs.android) pros.push(loc("Install Android Apps", "Bisa Instal Aplikasi Android"));
-            if(device.specs.wirelessCharging) pros.push(loc("Wireless Charging", "Pengisian Daya Nirkabel"));
+            if(device.specs.color) pros.push("Color Display");
+            if(device.specs.waterproof) pros.push("Waterproof");
+            if(device.specs.buttons) pros.push("Physical Buttons");
+            if(device.specs.android) pros.push("Install Android Apps");
+            if(device.specs.wirelessCharging) pros.push("Wireless Charging");
             
-            if (device.specs.ecosystem === 'amazon') {
-                pros.push(loc("Sideloaded books sync across apps", "Buku sideload sinkron di semua aplikasi"));
-                cons.push(loc("Locked to Amazon store", "Terkunci di ekosistem Amazon"));
-                if (device.specs.age === 'old') {
-                    cons.push(loc("Might need jailbreak for extra features", "Mungkin butuh jailbreak untuk fitur ekstra"));
-                }
-            } else if (device.specs.ecosystem === 'kobo') {
-                cons.push(loc("Sideloaded books don't sync across apps", "Buku sideload tidak sinkron di semua aplikasi"));
-            }
+            if(device.specs.battery === 'short') cons.push("Shorter battery life");
+            if(device.specs.ecosystem === 'amazon') cons.push("Locked to Amazon store");
+            if(!device.specs.waterproof) cons.push("Not waterproof");
 
-            if(device.specs.battery === 'short') cons.push(loc("Shorter battery life", "Daya tahan baterai lebih singkat"));
-            if(!device.specs.waterproof) cons.push(loc("Not waterproof", "Tidak anti air"));
-            
-            if(pros.length === 0) pros.push(loc("Solid standard e-reader", "E-reader standar yang tangguh"));
-            if(cons.length === 0) cons.push(loc("No major flaws", "Tidak ada kekurangan besar"));
+            if(pros.length === 0) pros.push("Solid standard e-reader");
+            if(cons.length === 0) cons.push("No major flaws");
 
             content.innerHTML = `
                 <button onclick="closeModal()" class="absolute top-4 right-4 text-basil hover:text-strawberry transition-colors bg-white rounded-full p-1 shadow-sm z-10">
@@ -913,13 +964,13 @@
                 
                 <div class="space-y-4">
                     <div class="bg-lightgreen/20 p-4 rounded-2xl">
-                        <h4 class="font-bold text-basil uppercase text-xs mb-2 tracking-widest">${loc("Key Features", "Fitur Utama")}</h4>
+                        <h4 class="font-bold text-basil uppercase text-xs mb-2 tracking-widest">Key Features</h4>
                         <ul class="text-sm text-basil space-y-1">
                             ${pros.map(p => `<li class="flex"><span class="text-basil font-bold mr-2">+</span> ${p}</li>`).join('')}
                         </ul>
                     </div>
                     <div class="bg-strawberry/10 p-4 rounded-2xl">
-                        <h4 class="font-bold text-basil uppercase text-xs mb-2 tracking-widest">${loc("Keep in mind", "Perlu Diingat")}</h4>
+                        <h4 class="font-bold text-basil uppercase text-xs mb-2 tracking-widest">Keep in mind</h4>
                         <ul class="text-sm text-basil space-y-1">
                             ${cons.map(c => `<li class="flex"><span class="text-strawberry font-bold mr-2">-</span> ${c}</li>`).join('')}
                         </ul>
@@ -948,6 +999,12 @@
         document.getElementById('modal').addEventListener('click', (e) => {
             if (e.target.id === 'modal') {
                 closeModal();
+            }
+        });
+
+        document.getElementById('buy-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'buy-modal') {
+                closeBuyModal();
             }
         });
 

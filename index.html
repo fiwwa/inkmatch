@@ -231,6 +231,52 @@
 
         const appDiv = document.getElementById('app');
 
+        function logUserDataToSheets(finalResult) {
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbylgLtEjuNcQGSKRHlOiZdJ7hpr_OzeUCoSVNO_EgRA07rfcQoG4IojZTS--WRYmBBO/exec"; 
+    
+    const activeQuestions = state.path === 'need' ? needQuestions : questions;
+
+    let readableAnswersArray = [];
+    
+    for (let questionId in state.answers) {
+        const rawValue = state.answers[questionId];
+        
+        // Find matching question configuration in the array
+        const qObj = activeQuestions.find(q => q.id === questionId);
+        if (qObj) {
+            // Get question text in current language (or default to EN)
+            const questionText = qObj.q.en; 
+            
+            // Find option text matching user selection value
+            const optObj = qObj.options.find(opt => opt.value === rawValue);
+            const chosenAnswerText = optObj ? optObj.label.en : rawValue;
+            
+            readableAnswersArray.push(`[${questionText} -> ${chosenAnswerText}]`);
+        }
+    }
+    
+    // Join all questions with newlines or spaces for cell legibility
+    const formattedAnswersSummary = readableAnswersArray.join("\n");
+
+    const payload = {
+        secret_token: "hctamkni6202", 
+        name: state.name || "Anonymous",
+        path: state.path,
+        result: finalResult,
+        answers: formattedAnswersSummary 
+    };
+
+    fetch(webAppUrl, {
+        method: "POST",
+        mode: "no-cors",
+        cache: "no-cache",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(() => console.log("Data & detailed answers successfully sent!"))
+    .catch(err => console.error("Logging failed: ", err));
+}
+
         function render() {
             const headerHtml = `
                 <div class="absolute top-4 left-4 right-4 z-10 flex justify-between items-center">
@@ -653,6 +699,8 @@
             const topPick = ranked[0];
             const runnerUps = ranked.slice(1, 4);
 
+            logUserDataToSheets(topPick.name);
+
             return `
                 <div class="fade-in flex flex-col h-full overflow-y-auto custom-scrollbar pr-2 pb-6">
                     <div class="text-center mb-8 shrink-0">
@@ -731,6 +779,9 @@
         function getCheckResultHtml() {
             const ranked = calculateMatches();
             const devices = state.targetDeviceIds.map(id => ranked.find(d => d.id === id));
+            
+            const evaluatedDevices = devices.map(d => `${d.name} (${d.score}% Match)`).join(" vs ");
+            logUserDataToSheets(evaluatedDevices);
             
             const renderCard = (device, index, total) => {
                 const likes = device.matchReasons.length > 0 ? device.matchReasons : [state.lang === 'en' ? "Fits your basic criteria" : "Sesuai kriteria dasarmu"];
@@ -887,6 +938,8 @@
             }
             
             const needsEreader = score >= 15; 
+
+            logUserDataToSheets(needsEreader ? "Needs E-reader" : "Doesn't Need E-reader");
 
             const title = needsEreader ? ui.needYesTitle : ui.needNoTitle;
             const desc = needsEreader ? ui.needYesDesc : ui.needNoDesc;

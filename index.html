@@ -93,7 +93,10 @@
             tryAnother: { en: "Try Another One", id: "Coba yang Lain" },
             close: { en: "Close", id: "Tutup" },
             
-            checkTitle: { en: "Which e-reader are you eyeing?", id: "E-reader mana yang kamu incar?" },
+            checkTitle: { 
+                en: "Which <span class='font-sunshiney font-normal text-3xl sm:text-4xl px-1 tracking-wide inline-block -translate-y-0.5'>e-reader</span> are you eyeing?", 
+                id: "<span class='font-sunshiney font-normal text-3xl sm:text-4xl px-1 tracking-wide inline-block -translate-y-0.5'>E-reader</span> mana yang kamu incar?" 
+            },
             checkSub: { en: "Select up to 2 devices you want to buy, and we'll see if they match your reading habits", id: "Pilih hingga 2 perangkat yang ingin dibeli, dan kita lihat apakah cocok dengan kebiasaan bacamu" },
             
             matchTitle: { en: "Here is your perfect e-reader,", id: "Ini dia e-reader terbaikmu," },
@@ -111,6 +114,9 @@
             findResultsSub: { en: "Check out why we think this suits you", id: "Lihat alasan kenapa ini cocok untukmu" },
             loveIt: { en: "What you'll love", id: "Yang akan kamu suka" },
             botherIt: { en: "What might bother you", id: "Yang mungkin mengganggumu" },
+            
+            findHelpful: { en: "Find us helpful?", id: "Merasa terbantu?" },
+            giveFeedback: { en: "Give a Feedback", id: "Beri masukan" },
 
             needYesTitle: { en: "Yes! You definitely need an e-reader", id: "Ya! Kamu sepertinya butuh e-reader" },
             needYesDesc: { en: "Based on your answers, an e-ink screen will save your eyes, keep you focused, and save physical space in your room.", id: "Berdasarkan jawabanmu, layar e-ink akan menyelamatkan matamu, membantumu fokus, dan menghemat ruang di kamarmu." },
@@ -184,7 +190,6 @@
             { id: "d_25", name: "Kindle Paperwhite 7th Gen", image: "https://m.media-amazon.com/images/I/61shyF063PL._AC_UF894,1000_QL80_.jpg", priceRange: "Rp700.000 - Rp1.500.000", buyLink: "undefined", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: false, warmLight: false, size: "compact", battery: "mid", libby: "multiple", wirelessCharging: false, stylus: false, storage: "4GB", budget: 1, age: "old" } }
         ];
 
-        // Ensure array ordering matches exactly what user requested
         const needQuestions = [
             { id: 'need_visual', q: { en: 'Are you currently reading ebooks from another device?', id: 'Apakah kamu saat ini membaca ebook dari perangkat lain?' }, options: [ { label: { en: 'Yes, mostly phone/tablet', id: 'Ya, biasanya HP/tablet' }, value: -2 }, { label: { en: 'No, I only read physical books', id: 'Tidak, aku cuma baca buku fisik' }, value: 1 } ] },
             { id: 'eye_strain', q: { en: 'Do your eyes easily get tired or dry when reading on a phone or tablet?', id: 'Apakah matamu mudah lelah atau kering saat membaca di HP/tablet?' }, options: [ { label: { en: 'Yes, quite often', id: 'Ya, lumayan sering' }, value: 2 }, { label: { en: 'Sometimes', id: 'Kadang-kadang' }, value: 1 }, { label: { en: 'No', id: 'Tidak' }, value: 0 } ] },
@@ -201,7 +206,7 @@
             { id: 'read_more', q: { en: 'Are you trying to build a habit of reading more?', id: 'Apakah kamu sedang mencoba membangun kebiasaan membaca lebih banyak?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'I already read a lot', id: 'Aku sudah sering baca' }, value: 1 }, { label: { en: 'Not really', id: 'Tidak juga' }, value: 0 } ] },
             { id: 'need_frequency', q: { en: 'How often do you usually read a book?', id: 'Seberapa sering kamu biasanya membaca buku?' }, options: [ { label: { en: 'Less than one book a month', id: 'Kurang dari satu buku sebulan' }, value: -2 }, { label: { en: 'A few books a month', id: 'Beberapa buku sebulan' }, value: 1 }, { label: { en: 'I read constantly', id: 'Aku baca terus-menerus' }, value: 2 } ] },
             { id: 'highlights', q: { en: 'Do you like highlighting quotes without ruining a physical book?', id: 'Apakah kamu suka menandai kutipan tanpa merusak buku fisik?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'I use sticky notes', id: 'Aku pakai sticky notes' }, value: 1 }, { label: { en: 'I do not highlight', id: 'Aku tidak menandai' }, value: 0 } ] },
-            { id: 'need_smell', q: { en: 'Do you absolutely love the smell and feel of physical paper?', id: 'Apakah kamu sangat menyukai aroma dan sensasi kertas fisik?' }, options: [ { label: { en: 'Yes, I can not read without it', id: 'Ya, nggak bisa baca tanpanya' }, value: -2 }, { label: { en: 'It is nice, but not essential', id: 'Suka, tapi nggak wajib' }, value: 1 }, { label: { en: 'I do not care about it', id: 'Biasa saja' }, value: 2 } ] },
+            { id: 'need_smell', q: { en: 'Do you absolutely love the smell and feel of physical paper?', id: 'Apakah kamu sangat menyukai aroma dan sensasi kertas fisik?' }, options: [ { label: { en: 'Yes, I can not read without it', id: 'Ya, nggak bisa baca tanpanya' }, value: -2 }, { label: { en: 'It is nice, but not essential', id: 'Suka, tapi nggak wajib' }, value: 2 }, { label: { en: 'I do not care about it', id: 'Biasa saja' }, value: 2 } ] },
             { id: 'need_secondhand', q: { en: 'Do you usually buy very cheap secondhand physical books to save money?', id: 'Apakah kamu biasanya beli buku fisik bekas yang sangat murah untuk hemat?' }, options: [ { label: { en: 'Yes, that is how I read', id: 'Ya, begitulah cara aku baca' }, value: -2 }, { label: { en: 'No, I buy new or use libraries', id: 'Tidak, aku beli baru atau ke perpus' }, value: 1 } ] },
             { id: 'storage', q: { en: 'How is your physical book storage situation at home?', id: 'Bagaimana kondisi ruang penyimpanan buku fisikmu di rumah?' }, options: [ { label: { en: 'Overflowing', id: 'Penuh banget' }, value: 2 }, { label: { en: 'Getting tight', id: 'Mulai penuh' }, value: 1 }, { label: { en: 'Plenty of space', id: 'Masih banyak ruang' }, value: 0 } ] },
             { id: 'need_buying', q: { en: 'Do you buy more than 5 physical books every month?', id: 'Apakah kamu beli lebih dari 5 buku fisik setiap bulan?' }, options: [ { label: { en: 'Yes', id: 'Ya' }, value: 2 }, { label: { en: 'No, rarely', id: 'Tidak, jarang' }, value: -2 } ] },
@@ -232,50 +237,102 @@
         const appDiv = document.getElementById('app');
 
         function logUserDataToSheets(finalResult) {
-    const webAppUrl = "https://script.google.com/macros/s/AKfycbylgLtEjuNcQGSKRHlOiZdJ7hpr_OzeUCoSVNO_EgRA07rfcQoG4IojZTS--WRYmBBO/exec"; 
-    
-    const activeQuestions = state.path === 'need' ? needQuestions : questions;
+            const webAppUrl = "https://script.google.com/macros/s/AKfycbylgLtEjuNcQGSKRHlOiZdJ7hpr_OzeUCoSVNO_EgRA07rfcQoG4IojZTS--WRYmBBO/exec"; 
+            
+            const activeQuestions = state.path === 'need' ? needQuestions : questions;
 
-    let readableAnswersArray = [];
-    
-    for (let questionId in state.answers) {
-        const rawValue = state.answers[questionId];
-        
-        // Find matching question configuration in the array
-        const qObj = activeQuestions.find(q => q.id === questionId);
-        if (qObj) {
-            // Get question text in current language (or default to EN)
-            const questionText = qObj.q.en; 
+            let readableAnswersArray = [];
             
-            // Find option text matching user selection value
-            const optObj = qObj.options.find(opt => opt.value === rawValue);
-            const chosenAnswerText = optObj ? optObj.label.en : rawValue;
+            for (let questionId in state.answers) {
+                const rawValue = state.answers[questionId];
+                
+                const qObj = activeQuestions.find(q => q.id === questionId);
+                if (qObj) {
+                    const questionText = qObj.q.en; 
+                    const optObj = qObj.options.find(opt => opt.value === rawValue);
+                    const chosenAnswerText = optObj ? optObj.label.en : rawValue;
+                    
+                    readableAnswersArray.push(`[${questionText} -> ${chosenAnswerText}]`);
+                }
+            }
             
-            readableAnswersArray.push(`[${questionText} -> ${chosenAnswerText}]`);
+            const formattedAnswersSummary = readableAnswersArray.join("\n");
+
+            const payload = {
+                secret_token: "hctamkni6202", 
+                name: state.name || "Anonymous",
+                path: state.path,
+                result: finalResult,
+                answers: formattedAnswersSummary 
+            };
+
+            fetch(webAppUrl, {
+                method: "POST",
+                mode: "no-cors",
+                cache: "no-cache",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload)
+            })
+            .then(() => console.log("Data & detailed answers successfully sent!"))
+            .catch(err => console.error("Logging failed: ", err));
         }
-    }
-    
-    // Join all questions with newlines or spaces for cell legibility
-    const formattedAnswersSummary = readableAnswersArray.join("\n");
 
-    const payload = {
-        secret_token: "hctamkni6202", 
-        name: state.name || "Anonymous",
-        path: state.path,
-        result: finalResult,
-        answers: formattedAnswersSummary 
-    };
+        function logFormToSheets(type, data) {
+            const webAppUrl = "https://script.google.com/macros/s/AKfycbylgLtEjuNcQGSKRHlOiZdJ7hpr_OzeUCoSVNO_EgRA07rfcQoG4IojZTS--WRYmBBO/exec"; 
+            
+            let answers = Object.entries(data).map(([k, v]) => `[${k} -> ${v}]`).join('\n');
+            let formResultName = "Form Submission";
+            if (type === 'survey') formResultName = "Survey Submission";
+            if (type === 'feedback') formResultName = "Feedback Submission";
+            if (type === 'question') formResultName = "Question Submission";
+            if (type === 'request') formResultName = "Device Request Submission";
 
-    fetch(webAppUrl, {
-        method: "POST",
-        mode: "no-cors",
-        cache: "no-cache",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload)
-    })
-    .then(() => console.log("Data & detailed answers successfully sent!"))
-    .catch(err => console.error("Logging failed: ", err));
-}
+            const payload = {
+                secret_token: "hctamkni6202", 
+                name: state.name || data.name || data.handle || "Anonymous",
+                path: type,
+                result: formResultName,
+                answers: answers
+            };
+
+            fetch(webAppUrl, {
+                method: "POST",
+                mode: "no-cors",
+                cache: "no-cache",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload)
+            }).catch(err => console.error("Logging failed: ", err));
+        }
+
+        function generateStarsHtml(groupName) {
+            let stars = '';
+            for(let i=1; i<=5; i++) {
+                stars += `
+                <svg id="star_${groupName}_${i}" onclick="setStar('${groupName}', ${i})" class="w-10 h-10 cursor-pointer text-basil fill-transparent hover:scale-110 transition-transform stroke-current stroke-2" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>`;
+            }
+            return `
+            <div class="flex gap-2 justify-center my-3">
+                ${stars}
+                <input type="hidden" name="${groupName}" id="rating_${groupName}" required>
+            </div>
+            `;
+        }
+
+        function setStar(group, rating) {
+            document.getElementById(`rating_${group}`).value = rating;
+            for(let i=1; i<=5; i++) {
+                const svg = document.getElementById(`star_${group}_${i}`);
+                if(i <= rating) {
+                    svg.classList.remove('text-basil', 'fill-transparent');
+                    svg.classList.add('text-yellow-400', 'fill-yellow-400');
+                } else {
+                    svg.classList.add('text-basil', 'fill-transparent');
+                    svg.classList.remove('text-yellow-400', 'fill-yellow-400');
+                }
+            }
+        }
 
         function render() {
             const headerHtml = `
@@ -311,6 +368,16 @@
 
             if (state.path === 'faq') {
                 contentHtml = getFaqHtml();
+            } else if (state.path === 'survey') {
+                contentHtml = getSurveyHtml();
+            } else if (state.path === 'feedback') {
+                contentHtml = getFeedbackHtml();
+            } else if (state.path === 'question') {
+                contentHtml = getQuestionFormHtml();
+            } else if (state.path === 'request') {
+                contentHtml = getRequestFormHtml();
+            } else if (state.path === 'thanks') {
+                contentHtml = getThanksHtml();
             } else if (!state.path) {
                 contentHtml = getHomeHtml();
             } else if (state.path === 'check' && !state.checkStarted) {
@@ -378,7 +445,7 @@
 
         function startFlow(pathType) {
             const nameInputEl = document.getElementById('nameInput');
-            if (nameInputEl) {
+            if (nameInputEl && (pathType === 'find' || pathType === 'check' || pathType === 'need')) {
                 const nameInput = nameInputEl.value.trim();
                 if (!nameInput) {
                     document.getElementById('errorMsg').classList.remove('hidden');
@@ -436,7 +503,7 @@
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> ${t(ui.back)}
                     </button>
                     <div class="shrink-0 mb-6">
-                        <h2 class="text-2xl sm:text-3xl font-bold text-basil mb-2">${t(ui.checkTitle)}</h2>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-basil mb-2 leading-tight">${t(ui.checkTitle)}</h2>
                         <p class="text-basil/70">${t(ui.checkSub)}</p>
                     </div>
                     
@@ -448,9 +515,9 @@
                     
                     <div class="mt-4 mb-10 pb-12 text-center pt-4 shrink-0">
                         <p class="text-basil/70 font-medium mb-3">${t(ui.missingDevice)}</p>
-                        <a href="https://forms.gle/EQDHMWbPyMFQZ4nr5" target="_blank" class="inline-block bg-basil hover:bg-basil/90 text-white font-bold py-2 px-6 rounded-xl transition-all shadow-sm hover:shadow-md">
+                        <button onclick="startFlow('request')" class="inline-block bg-darkpink hover:bg-darkpink/90 text-white font-bold py-2 px-6 rounded-xl transition-all shadow-sm hover:shadow-md">
                             ${t(ui.submitRequest)}
-                        </a>
+                        </button>
                     </div>
                 </div>
                 ${continueBtn}
@@ -560,7 +627,6 @@
                     }
                 };
 
-                // 1. Source Ecosystem
                 if (state.answers.source === 'amazon') evaluate(25, device.specs.ecosystem === 'amazon', "Seamless Amazon Store integration", "Buying Amazon books requires extra steps");
                 else if (state.answers.source === 'kobo') evaluate(25, device.specs.ecosystem === 'kobo', "Seamless Kobo Store integration", "Buying Kobo books requires extra steps");
                 else if (state.answers.source === 'android') evaluate(25, device.specs.android === true, "Full access to local Android apps", "Cannot install local Android reading apps natively");
@@ -568,7 +634,6 @@
                 else if (state.answers.source === 'sideload') evaluate(20, device.specs.ecosystem === 'android' || device.specs.ecosystem === 'kobo' || device.specs.ecosystem === 'amazon', "Easy to sideload and sync EPUBs", null);
                 else if (state.answers.source === 'mixed') evaluate(25, device.specs.android === true, "Android allows access to multiple stores and formats", "Locked into a specific brand ecosystem so you cannot install local apps");
 
-                // 2. Content / Color
                 if (state.answers.content === 'manga_comic' || state.answers.content === 'mixed') {
                     evaluate(15, device.specs.size === 'bigger', "Larger screen ideal for formatting and graphics", null);
                     if (device.specs.size === 'compact') drawbacks.push("Compact size might be too small for complex graphics");
@@ -585,21 +650,17 @@
                     if (device.specs.color) drawbacks.push("Color screens use a lower PPI layer making it slightly darker/less sharp for pure text");
                 }
 
-                // 3. Size Preference
                 if (state.answers.size === 'compact') evaluate(15, device.specs.size === 'compact', "Compact and lightweight design", "Larger than preferred");
                 else if (state.answers.size === 'bigger') evaluate(15, device.specs.size === 'bigger', "Comfortable, book-like reading area", "Smaller screen than requested");
 
-                // 4. Waterproofing
                 if (state.answers.waterproof === 'essential') evaluate(15, device.specs.waterproof === true, "Fully waterproof for reading anywhere", "Not waterproof");
                 else if (state.answers.waterproof === 'nice') {
                     if (device.specs.waterproof) evaluate(5, true, "Has bonus waterproofing", null);
                 }
 
-                // 5. Buttons
                 if (state.answers.buttons === 'buttons') evaluate(40, device.specs.buttons === true, "Has physical page-turn buttons", "Lacks physical buttons");
                 else if (state.answers.buttons === 'touch') evaluate(40, device.specs.buttons === false, "Streamlined touchscreen-only design", "Has physical buttons which you didn't prefer");
 
-                // Sync across devices
                 if (state.answers.sync === 'yes') {
                     if (device.specs.ecosystem === 'amazon') {
                         evaluate(15, true, "Progress syncs perfectly across Kindle apps (even for sideloaded books)", null);
@@ -610,23 +671,18 @@
                     }
                 }
 
-                // 6. Library/Libby
                 if (state.answers.library === 'one') evaluate(15, device.specs.libby === 'one' || device.specs.android || device.specs.libby === 'multiple', "Supports your library needs", "Might not support Libby directly");
                 else if (state.answers.library === 'multiple') evaluate(15, device.specs.android || device.specs.ecosystem === 'amazon', "Can handle multiple library sources/cards", "Kobo natively only supports one active Libby card");
 
-                // 7. Stylus / Notes
                 if (state.answers.notes === 'yes') evaluate(15, device.specs.stylus === true, "Supports stylus input for handwritten notes", "Cannot take handwritten notes");
 
-                // 8. Wireless Charging
                 if (state.answers.wireless === 'yes') evaluate(5, device.specs.wirelessCharging === true, "Supports convenient wireless charging", "Requires a cable to charge");
                 
-                // 10. Reading Time (Battery)
                 if (state.answers.reading_time === 'long') evaluate(15, device.specs.battery === 'long', "Excellent battery life for long sessions", "Battery might need more frequent charging");
                 else if (state.answers.reading_time === 'short') {
                     if(device.specs.battery !== 'long') evaluate(5, true, "Sufficient battery for casual reading", null);
                 }
 
-                // 11. Tracker Logic
                 if (state.answers.tracker === 'goodreads') {
                     evaluate(10, device.specs.ecosystem === 'amazon' || device.specs.android, "Goodreads integration supported", "No built-in Goodreads sync");
                 } else if (state.answers.tracker === 'storygraph') {
@@ -635,19 +691,16 @@
                     evaluate(10, device.specs.android === true, "Can install third-party tracking apps", "Locked ecosystem limits tracking apps");
                 }
 
-                // Device Age Preference
                 if (state.answers.device_age === 'new') {
                     evaluate(15, device.specs.age === 'new' || device.specs.age === 'mid', "Newer device, better longevity", "Older device, might stop receiving updates soon");
                 } else if (state.answers.device_age === 'old') {
                     if (device.specs.age === 'old') evaluate(5, true, "Older device (easier to jailbreak if needed)", null);
                 }
 
-                // Older Kindle Note
                 if (device.specs.ecosystem === 'amazon' && device.specs.age === 'old') {
                     drawbacks.push("Older Kindle devices released pre-2020 might need jailbreaking for certain features");
                 }
 
-                // 12. Budget
                 if (state.answers.budget !== undefined) {
                     maxPossible += 30; 
                     if (device.specs.budget <= state.answers.budget) {
@@ -768,10 +821,20 @@
                             </div>
                         `).join('')}
                     </div>
+                    
+                    <div class="mt-8 mb-4 text-center shrink-0">
+                        <button onclick="resetApp()" class="font-sunshiney text-lg sm:text-xl tracking-wider mx-auto bg-basil hover:bg-basil/90 text-white py-3 px-8 rounded-2xl transition-colors shadow-md">
+                            ${t(ui.startOver)}
+                        </button>
+                    </div>
 
-                    <button onclick="resetApp()" class="font-sunshiney text-lg sm:text-xl tracking-wider mt-12 mx-auto bg-basil hover:bg-basil/90 text-white py-3 px-8 rounded-2xl transition-colors shadow-md shrink-0">
-                        ${t(ui.startOver)}
-                    </button>
+                    <div class="mt-8 mb-6 text-center shrink-0 flex flex-col items-center">
+                        <p class="text-basil/70 font-bold mb-3 text-sm tracking-wide uppercase">${t(ui.findHelpful)}</p>
+                        <button onclick="startFlow('feedback')" class="inline-flex items-center bg-darkpink hover:bg-darkpink/90 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-sm hover:shadow-md">
+                            <svg class="w-5 h-5 mr-2 fill-white" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                            ${t({ en: "Give a Feedback", id: "Beri masukan" })}
+                        </button>
+                    </div>
                 </div>
             `;
         }
@@ -855,10 +918,20 @@
                     <div class="grid grid-cols-1 ${devices.length === 2 ? 'lg:grid-cols-2 lg:gap-8' : 'max-w-3xl mx-auto'} gap-8 shrink-0 w-full items-stretch">
                         ${devices.map((d, index) => renderCard(d, index, devices.length)).join('')}
                     </div>
+                    
+                    <div class="mt-8 mb-4 text-center shrink-0">
+                        <button onclick="resetApp()" class="font-sunshiney text-lg sm:text-xl tracking-wider mx-auto bg-basil hover:bg-basil/90 text-white py-3 px-8 rounded-2xl transition-colors shadow-md">
+                            ${t(ui.tryAnother)}
+                        </button>
+                    </div>
 
-                    <button onclick="resetApp()" class="font-sunshiney text-lg sm:text-xl tracking-wider mt-10 mx-auto bg-basil hover:bg-basil/90 text-white py-3 px-8 rounded-2xl transition-colors shadow-md shrink-0">
-                        ${t(ui.tryAnother)}
-                    </button>
+                    <div class="mt-8 mb-6 text-center shrink-0 flex flex-col items-center">
+                        <p class="text-basil/70 font-bold mb-3 text-sm tracking-wide uppercase">${t(ui.findHelpful)}</p>
+                        <button onclick="startFlow('feedback')" class="inline-flex items-center bg-darkpink hover:bg-darkpink/90 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-sm hover:shadow-md">
+                            <svg class="w-5 h-5 mr-2 fill-white" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                            ${t({ en: "Give a Feedback", id: "Beri masukan" })}
+                        </button>
+                    </div>
                 </div>
             `;
         }
@@ -916,15 +989,299 @@
                     </div>
 
                     <div class="flex flex-col sm:flex-row justify-center items-center gap-6 mt-12 w-full">
-                        <a href="https://forms.gle/8ufRn7oBaWBbcs2n9" target="_blank" class="w-full sm:w-auto sm:min-w-[300px] px-6 bg-darkpink hover:bg-darkpink/90 border-2 border-transparent hover:border-duckegg rounded-2xl p-4 flex flex-row items-center justify-center transition-all group cursor-pointer text-white shadow-md">
+                        <button onclick="startFlow('survey')" class="w-full sm:w-auto sm:min-w-[300px] px-6 bg-darkpink hover:bg-darkpink/90 border-2 border-transparent hover:border-duckegg rounded-2xl p-4 flex flex-row items-center justify-center transition-all group cursor-pointer text-white shadow-md">
                             <svg class="w-6 h-6 mr-3 group-hover:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             <span class="font-bold text-xs uppercase tracking-wider whitespace-nowrap">${t(ui.surveyText)}</span>
-                        </a>
-                        <a href="https://forms.gle/EQDHMWbPyMFQZ4nr5" target="_blank" class="w-full sm:w-auto sm:min-w-[300px] px-6 bg-darkpink hover:bg-darkpink/90 border-2 border-transparent hover:border-duckegg rounded-2xl p-4 flex flex-row items-center justify-center transition-all group cursor-pointer text-white shadow-md">
+                        </button>
+                        <button onclick="startFlow('question')" class="w-full sm:w-auto sm:min-w-[300px] px-6 bg-darkpink hover:bg-darkpink/90 border-2 border-transparent hover:border-duckegg rounded-2xl p-4 flex flex-row items-center justify-center transition-all group cursor-pointer text-white shadow-md">
                             <svg class="w-6 h-6 mr-3 group-hover:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"></path></svg>
                             <span class="font-bold text-xs uppercase tracking-wider whitespace-nowrap">${t(ui.qnaText)}</span>
-                        </a>
+                        </button>
                     </div>
+                </div>
+            `;
+        }
+
+        function generateStarsHtml(groupName) {
+            let stars = '';
+            for(let i=1; i<=5; i++) {
+                stars += `
+                <svg id="star_${groupName}_${i}" onclick="setStar('${groupName}', ${i})" class="w-10 h-10 cursor-pointer text-basil fill-transparent hover:scale-110 transition-transform stroke-current stroke-2" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>`;
+            }
+            return `
+            <div class="flex gap-2 justify-center my-3">
+                ${stars}
+                <input type="hidden" name="${groupName}" id="rating_${groupName}" required>
+            </div>
+            `;
+        }
+
+        function getQuestionFormHtml() {
+            return `
+                <div class="fade-in flex flex-col h-full overflow-y-auto custom-scrollbar pr-2 pb-10">
+                    <button onclick="state.path='faq'; render();" class="self-start text-basil/60 hover:text-basil mb-6 flex items-center transition-colors font-medium shrink-0 text-sm">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> ${t({en: 'Back', id: 'Kembali'})}
+                    </button>
+
+                    <div class="shrink-0 mb-6 text-center">
+                        <h2 class="font-sunshiney text-4xl sm:text-5xl text-basil mb-3">Ask a Question</h2>
+                    </div>
+
+                    <form onsubmit="handleQuestionSubmit(event)" class="space-y-8 max-w-2xl mx-auto w-full bg-duckegg/10 p-6 sm:p-8 rounded-[2rem] border-2 border-duckegg shadow-sm text-center">
+                        
+                        <div class="flex flex-col space-y-2 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'Your Name', id: 'Nama Kamu'})}</label>
+                            <input type="text" name="name" required value="${state.name}" class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full">
+                        </div>
+
+                        <div class="flex flex-col space-y-2">
+                            <label class="font-semibold text-basil text-lg">${t({en: 'How is your experience in using InkMatch?', id: 'Bagaimana pengalamanmu menggunakan InkMatch?'})}</label>
+                            ${generateStarsHtml('question_exp')}
+                        </div>
+
+                        <div class="flex flex-col space-y-2 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'What e-reader related question can InkMatch help you with?', id: 'Pertanyaan seputar e-reader apa yang bisa dibantu oleh InkMatch?'})}</label>
+                            <textarea name="question" required rows="4" class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full custom-scrollbar"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full mt-4 bg-basil hover:bg-basil/90 text-white font-bold py-3.5 px-6 rounded-2xl transition-all shadow-md">
+                            ${t({en: 'Submit response', id: 'Kirim tanggapan'})}
+                        </button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function getRequestFormHtml() {
+            return `
+                <div class="fade-in flex flex-col h-full overflow-y-auto custom-scrollbar pr-2 pb-10">
+                    <button onclick="state.path='check'; render();" class="self-start text-basil/60 hover:text-basil mb-6 flex items-center transition-colors font-medium shrink-0 text-sm">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> ${t({en: 'Back', id: 'Kembali'})}
+                    </button>
+
+                    <div class="shrink-0 mb-6 text-center">
+                        <h2 class="font-sunshiney text-4xl sm:text-5xl text-basil mb-3">Request an E-reader</h2>
+                    </div>
+
+                    <form onsubmit="handleRequestSubmit(event)" class="space-y-8 max-w-2xl mx-auto w-full bg-duckegg/10 p-6 sm:p-8 rounded-[2rem] border-2 border-duckegg shadow-sm text-center">
+                        
+                        <div class="flex flex-col space-y-2 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'Your Name', id: 'Nama Kamu'})}</label>
+                            <input type="text" name="name" required value="${state.name}" class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full">
+                        </div>
+
+                        <div class="flex flex-col space-y-2">
+                            <label class="font-semibold text-basil text-lg">${t({en: 'How is your experience in using InkMatch?', id: 'Bagaimana pengalamanmu menggunakan InkMatch?'})}</label>
+                            ${generateStarsHtml('request_exp')}
+                        </div>
+
+                        <div class="flex flex-col space-y-2 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'Which e-reader type do you wish to be listed?', id: 'Tipe e-reader apa yang ingin kamu daftarkan?'})}</label>
+                            <input type="text" name="device_request" required class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full">
+                        </div>
+
+                        <button type="submit" class="w-full mt-4 bg-basil hover:bg-basil/90 text-white font-bold py-3.5 px-6 rounded-2xl transition-all shadow-md">
+                            ${t({en: 'Submit response', id: 'Kirim tanggapan'})}
+                        </button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function getSurveyHtml() {
+            return `
+                <div class="fade-in flex flex-col h-full overflow-y-auto custom-scrollbar pr-2 pb-10">
+                    <button onclick="state.path='faq'; render();" class="self-start text-basil/60 hover:text-basil mb-6 flex items-center transition-colors font-medium shrink-0 text-sm">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> ${t({en: 'Back', id: 'Kembali'})}
+                    </button>
+
+                    <div class="shrink-0 mb-6 text-center">
+                        <h2 class="font-sunshiney text-4xl sm:text-5xl text-basil mb-3">${t({en: 'E-reader Survey', id: 'Survei E-reader'})}</h2>
+                        <p class="text-basil/80 text-sm max-w-2xl mx-auto">
+                            ${t({en: "Thank you for helping us improve! If you own or have used more than one e-reader model, you are welcome to submit a separate response for each device. We'd love to hear about it ;)", id: "Terima kasih telah membantu kami! Jika kamu memiliki atau pernah menggunakan lebih dari satu model e-reader, kamu boleh mengirimkan tanggapan terpisah untuk setiap perangkat. Kami sangat ingin mendengarnya ;)"})}
+                        </p>
+                    </div>
+
+                    <form onsubmit="handleSurveySubmit(event)" class="space-y-6 max-w-2xl mx-auto w-full bg-duckegg/10 p-6 sm:p-8 rounded-[2rem] border-2 border-duckegg shadow-sm">
+                        
+                        <div class="flex flex-col space-y-2 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'Your Name', id: 'Nama Kamu'})}</label>
+                            <input type="text" name="name" required class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full">
+                        </div>
+
+                        <div class="flex flex-col space-y-2 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'Instagram / X Handle', id: 'Username Instagram / X'})}</label>
+                            <input type="text" name="handle" class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full">
+                        </div>
+
+                        <div class="flex flex-col space-y-2 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'E-reader Brand & Type', id: 'Merek & Tipe E-reader'})}</label>
+                            <p class="text-xs text-basil/70 -mt-1 mb-1">${t({en: 'ex: "Kindle Paperwhite 11th Gen", "Kobo Clara Colour", "Onyx Boox Poke 5"', id: 'contoh: "Kindle Paperwhite 11th Gen", "Kobo Clara Colour", "Onyx Boox Poke 5"'})}</p>
+                            <input type="text" name="brand" required class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full">
+                        </div>
+
+                        <div class="flex flex-col space-y-3 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'Are you still using this device until now?', id: 'Apakah kamu masih menggunakan perangkat ini sampai sekarang?'})}</label>
+                            <label class="flex items-center gap-3 font-normal text-basil cursor-pointer">
+                                <input type="radio" name="still_using" value="Yes" required class="w-5 h-5 text-basil focus:ring-hydrangea"> <span>${t({en: 'Yes', id: 'Ya'})}</span>
+                            </label>
+                            <label class="flex items-center gap-3 font-normal text-basil cursor-pointer">
+                                <input type="radio" name="still_using" value="No, I don't use this device anymore" required class="w-5 h-5 text-basil focus:ring-hydrangea"> <span>${t({en: "No, I don't use this device anymore", id: 'Tidak, saya tidak memakai perangkat ini lagi'})}</span>
+                            </label>
+                            <label class="flex items-center gap-3 font-normal text-basil cursor-pointer">
+                                <input type="radio" name="still_using" value="No, I switched to another device" required class="w-5 h-5 text-basil focus:ring-hydrangea"> <span>${t({en: 'No, I switched to another device', id: 'Tidak, saya sudah ganti ke perangkat lain'})}</span>
+                            </label>
+                        </div>
+
+                        <div class="flex flex-col space-y-3 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'Screen Type', id: 'Tipe Layar'})}</label>
+                            <label class="flex items-center gap-3 font-normal text-basil cursor-pointer">
+                                <input type="radio" name="screen" value="Black & White" required class="w-5 h-5 text-basil focus:ring-hydrangea"> <span>Black & White</span>
+                            </label>
+                            <label class="flex items-center gap-3 font-normal text-basil cursor-pointer">
+                                <input type="radio" name="screen" value="Colored" required class="w-5 h-5 text-basil focus:ring-hydrangea"> <span>Colored</span>
+                            </label>
+                            <label class="flex items-center gap-3 font-normal text-basil cursor-pointer">
+                                <input type="radio" name="screen" value="Dual-mode (B&W and Colored)" required class="w-5 h-5 text-basil focus:ring-hydrangea"> <span>Dual-mode (B&W and Colored)</span>
+                            </label>
+                        </div>
+
+                        <div class="flex flex-col space-y-3 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'Storage Capacity', id: 'Kapasitas Penyimpanan'})}</label>
+                            ${['4GB', '8GB', '16GB', '32GB', '64GB'].map(cap => `
+                                <label class="flex items-center gap-3 font-normal text-basil cursor-pointer">
+                                    <input type="radio" name="storage" value="${cap}" required onchange="document.getElementById('storage_other_wrap').classList.add('hidden'); document.getElementById('storage_other_input').required = false;" class="w-5 h-5 text-basil focus:ring-hydrangea"> <span>${cap}</span>
+                                </label>
+                            `).join('')}
+                            <label class="flex items-center gap-3 font-normal text-basil cursor-pointer">
+                                <input type="radio" name="storage" value="Other" required onchange="document.getElementById('storage_other_wrap').classList.remove('hidden'); document.getElementById('storage_other_input').required = true;" class="w-5 h-5 text-basil focus:ring-hydrangea"> <span>Other:</span>
+                            </label>
+                            <div id="storage_other_wrap" class="hidden pl-8">
+                                <input type="text" name="storage_other" id="storage_other_input" class="font-normal border-2 border-duckegg rounded-xl p-2 w-full max-w-[200px] focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white">
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col space-y-2 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'Purchase Price', id: 'Harga Beli'})}</label>
+                            <p class="text-xs text-basil/70 -mt-1 mb-1">${t({en: 'ex: "IDR 2.000.000", "USD 200"', id: 'contoh: "Rp 2.000.000", "USD 200"'})}</p>
+                            <input type="text" name="price" required class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full">
+                        </div>
+
+                        <div class="flex flex-col space-y-3 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'Place of Purchase', id: 'Tempat Membeli'})}</label>
+                            ${[
+                                {en: 'Official website', id: 'Website resmi'},
+                                {en: 'Local e-commerce (Tokopedia/Shopee/TikTok Shop)', id: 'E-commerce lokal (Tokopedia/Shopee/TikTok Shop)'},
+                                {en: 'Secondhand Marketplace (Carousell/Facebook)', id: 'Marketplace barang bekas (Carousell/Facebook)'},
+                                {en: 'Instagram personal shopper (Jastip)', id: 'Jastip Instagram'},
+                                {en: 'In store', id: 'Toko offline'}
+                            ].map(opt => `
+                                <label class="flex items-center gap-3 font-normal text-basil cursor-pointer">
+                                    <input type="radio" name="place" value="${opt.en}" required onchange="document.getElementById('place_other_wrap').classList.add('hidden'); document.getElementById('place_other_input').required = false;" class="w-5 h-5 text-basil focus:ring-hydrangea"> <span>${t(opt)}</span>
+                                </label>
+                            `).join('')}
+                            <label class="flex items-center gap-3 font-normal text-basil cursor-pointer">
+                                <input type="radio" name="place" value="Other" required onchange="document.getElementById('place_other_wrap').classList.remove('hidden'); document.getElementById('place_other_input').required = true;" class="w-5 h-5 text-basil focus:ring-hydrangea"> <span>Other:</span>
+                            </label>
+                            <div id="place_other_wrap" class="hidden pl-8">
+                                <input type="text" name="place_other" id="place_other_input" class="font-normal border-2 border-duckegg rounded-xl p-2 w-full focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white">
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col space-y-3 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'Main Book Sources (multiple answers allowed)', id: 'Sumber Buku Utama (Boleh pilih lebih dari satu)'})}</label>
+                            ${['Kindle Store / Kindle Unlimited', 'Kobo Store', 'Libby', 'iPusnas / Indonesian libraries', 'Sideload (Send EPUB files via Web/USB)'].map(opt => `
+                                <label class="flex items-center gap-3 font-normal text-basil cursor-pointer">
+                                    <input type="checkbox" name="sources" value="${opt}" class="w-5 h-5 text-basil rounded focus:ring-hydrangea"> <span>${opt}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex flex-col space-y-2 text-left">
+                            <label class="font-semibold text-basil">
+                                ${t({en: 'Features you <span class="italic">love</span> about this device', id: 'Fitur yang kamu <span class="italic">suka</span> dari perangkat ini'})}
+                            </label>
+                            <p class="text-xs text-basil/70 -mt-1 mb-1">${t({en: 'Screen quality, battery life, books sync, etc.', id: 'Kualitas layar, daya tahan baterai, sinkronisasi buku, dll.'})}</p>
+                            <textarea name="love_features" required rows="3" class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full custom-scrollbar"></textarea>
+                        </div>
+
+                        <div class="flex flex-col space-y-2 text-left">
+                            <label class="font-semibold text-basil">
+                                ${t({en: 'Features that <span class="italic">bother</span> you or wish were better', id: 'Fitur yang <span class="italic">mengganggu</span> atau butuh peningkatan'})}
+                            </label>
+                            <p class="text-xs text-basil/70 -mt-1 mb-1">${t({en: 'Any issues you faced, or why you stopped using it.', id: 'Masalah yang kamu hadapi, atau kenapa kamu berhenti menggunakannya.'})}</p>
+                            <textarea name="bother_features" required rows="3" class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full custom-scrollbar"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full mt-4 bg-basil hover:bg-basil/90 text-white font-bold py-3.5 px-6 rounded-2xl transition-all shadow-md">
+                            ${t({en: 'Submit response', id: 'Kirim tanggapan'})}
+                        </button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function getFeedbackHtml() {
+            return `
+                <div class="fade-in flex flex-col h-full overflow-y-auto custom-scrollbar pr-2 pb-10">
+                    <button onclick="resetApp()" class="self-start text-basil/60 hover:text-basil mb-6 flex items-center transition-colors font-medium shrink-0 text-sm">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> ${t({en: 'Back', id: 'Kembali'})}
+                    </button>
+
+                    <div class="shrink-0 mb-6 text-center">
+                        <h2 class="font-sunshiney text-4xl sm:text-5xl text-basil mb-3">Feedback</h2>
+                    </div>
+
+                    <form onsubmit="handleFeedbackSubmit(event)" class="space-y-8 max-w-2xl mx-auto w-full bg-duckegg/10 p-6 sm:p-8 rounded-[2rem] border-2 border-duckegg shadow-sm text-center">
+                        
+                        <div class="flex flex-col space-y-2">
+                            <label class="font-semibold text-basil text-lg">${t({en: 'How accurate do you find the results of InkMatch?', id: 'Seberapa akurat hasil InkMatch menurutmu?'})}</label>
+                            ${generateStarsHtml('accuracy')}
+                        </div>
+
+                        <div class="flex flex-col space-y-2">
+                            <label class="font-semibold text-basil text-lg">${t({en: 'How easy do you find the use of InkMatch?', id: 'Seberapa mudah penggunaan InkMatch menurutmu?'})}</label>
+                            ${generateStarsHtml('ease')}
+                        </div>
+
+                        <div class="flex flex-col space-y-2">
+                            <label class="font-semibold text-basil text-lg">${t({en: 'How is your overall experience in using InkMatch?', id: 'Bagaimana pengalaman keseluruhanmu menggunakan InkMatch?'})}</label>
+                            ${generateStarsHtml('overall')}
+                        </div>
+
+                        <div class="flex flex-col space-y-2 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'Do you experience any problems in using InkMatch?', id: 'Apakah kamu mengalami masalah saat menggunakan InkMatch?'})}</label>
+                            <textarea name="problems" required rows="3" class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full custom-scrollbar"></textarea>
+                        </div>
+
+                        <div class="flex flex-col space-y-2 text-left">
+                            <label class="font-semibold text-basil">${t({en: 'What improvements do you wish to be made?', id: 'Apa yang bisa ditingkatkan?'})}</label>
+                            <textarea name="improvements" required rows="3" class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full custom-scrollbar"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full mt-4 bg-basil hover:bg-basil/90 text-white font-bold py-3.5 px-6 rounded-2xl transition-all shadow-md">
+                            ${t({en: 'Submit response', id: 'Kirim tanggapan'})}
+                        </button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function getThanksHtml() {
+            return `
+                <div class="fade-in flex flex-col h-full items-center justify-center text-center">
+                    <div class="w-24 h-24 sm:w-32 sm:h-32 bg-lightgreen rounded-full flex items-center justify-center mb-6 shadow-lg border-4 border-white">
+                        <svg class="w-12 h-12 sm:w-16 sm:h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <h2 class="font-sunshiney text-4xl sm:text-5xl text-basil mb-4">Thank You!</h2>
+                    <p class="text-basil/80 text-lg mb-8 max-w-md">
+                        ${t({en: 'Your response has been submitted successfully. We appreciate your input!', id: 'Tanggapanmu berhasil dikirim. Kami sangat menghargai masukanmu!'})}
+                    </p>
+                    <button onclick="resetApp()" class="bg-basil hover:bg-basil/90 text-white font-bold py-3 px-8 rounded-2xl transition-colors shadow-md">
+                        ${t({en: 'Back to Home', id: 'Kembali ke Beranda'})}
+                    </button>
                 </div>
             `;
         }
@@ -980,6 +1337,88 @@
                     </button>
                 </div>
             `;
+        }
+
+        function setStar(group, rating) {
+            document.getElementById(`rating_${group}`).value = rating;
+            for(let i=1; i<=5; i++) {
+                const svg = document.getElementById(`star_${group}_${i}`);
+                if(i <= rating) {
+                    svg.classList.remove('text-basil', 'fill-transparent');
+                    svg.classList.add('text-yellow-400', 'fill-yellow-400');
+                } else {
+                    svg.classList.add('text-basil', 'fill-transparent');
+                    svg.classList.remove('text-yellow-400', 'fill-yellow-400');
+                }
+            }
+        }
+
+        function handleSurveySubmit(e) {
+            e.preventDefault();
+            const fd = new FormData(e.target);
+            const data = Object.fromEntries(fd.entries());
+            
+            const sources = fd.getAll('sources');
+            if(sources.length === 0) {
+                alert(state.lang === 'en' ? 'Please select at least one main book source.' : 'Pilih setidaknya satu sumber buku utama.');
+                return;
+            }
+            data.sources = sources.join(', ');
+            
+            if(data.storage === 'Other') data.storage = `Other: ${data.storage_other}`;
+            if(data.place === 'Other') data.place = `Other: ${data.place_other}`;
+            
+            delete data.storage_other;
+            delete data.place_other;
+
+            logFormToSheets('survey', data);
+            state.path = 'thanks';
+            render();
+        }
+
+        function handleFeedbackSubmit(e) {
+            e.preventDefault();
+            const fd = new FormData(e.target);
+            const data = Object.fromEntries(fd.entries());
+            
+            if(!data.accuracy || !data.ease || !data.overall) {
+                alert(state.lang === 'en' ? 'Please fill out all the star ratings.' : 'Mohon isi semua penilaian bintang.');
+                return;
+            }
+
+            logFormToSheets('feedback', data);
+            state.path = 'thanks';
+            render();
+        }
+
+        function handleQuestionSubmit(e) {
+            e.preventDefault();
+            const fd = new FormData(e.target);
+            const data = Object.fromEntries(fd.entries());
+            
+            if(!data.question_exp) {
+                alert(state.lang === 'en' ? 'Please fill out the star rating.' : 'Mohon isi penilaian bintang.');
+                return;
+            }
+
+            logFormToSheets('question', data);
+            state.path = 'thanks';
+            render();
+        }
+
+        function handleRequestSubmit(e) {
+            e.preventDefault();
+            const fd = new FormData(e.target);
+            const data = Object.fromEntries(fd.entries());
+            
+            if(!data.request_exp) {
+                alert(state.lang === 'en' ? 'Please fill out the star rating.' : 'Mohon isi penilaian bintang.');
+                return;
+            }
+
+            logFormToSheets('request', data);
+            state.path = 'thanks';
+            render();
         }
 
         function openModal(deviceId) {

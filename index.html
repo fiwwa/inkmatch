@@ -3,7 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InkMatch</title>
+    
+    <title>InkMatch: Your E-reader Matchmaker</title>
+    <meta name="title" content="InkMatch: Your E-reader Matchmaker">
+    <meta name="description" content="Let's find your perfect digital reading companion! Answer a few questions to see which e-reader fits your lifestyle best.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/">
+    <meta property="og:title" content="InkMatch: Your E-reader Matchmaker">
+    <meta property="og:description" content="Let's find your perfect digital reading companion! Answer a few questions to see which e-reader fits your lifestyle best.">
+    <meta property="og:image" content="https://fiwwa.github.io/inkmatch/inkmatch-preview.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourwebsite.com/">
+    <meta property="twitter:title" content="InkMatch: Your E-reader Matchmaker">
+    <meta property="twitter:description" content="Let's find your perfect digital reading companion! Answer a few questions to see which e-reader fits your lifestyle best.">
+    <meta property="twitter:image" content="https://fiwwa.github.io/inkmatch/inkmatch-preview.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Sunshiney&display=swap" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
@@ -136,21 +154,33 @@
             faq2Q: { en: "Where can I buy the e-reader?", id: "Di mana saya bisa membeli e-reader?" },
             faq2A: { 
                 en: "You can buy them at official stores on marketplaces, Carousell, Facebook Marketplace, or trusted Instagram sellers.<br><span class=\"text-basil font-medium block mt-1\"><strong>Beware of secondhand frauds!</strong> Fraudsters usually refuse to use marketplace platforms for transactions, have a bot-like username (e.g., random word/name with many numbers), and put the price suspiciously low. Always use an official platform's secure payment system!</span>", 
-                id: "Kamu bisa membelinya di website resmi, marketplace (kami sudah menyertakan link untuk hampir semua e-reader yang kami temukan!), Carousell dan Facebook Marketplace untuk perangkat bekas, atau penjual di Instagram terpercaya yang menawarkan jasa titip beli.<br><span class=\"text-basil font-medium block mt-1\"><strong>Hati-hati penipuan barang bekas!</strong> Penipu biasanya menolak untuk melakukan transaksi melalui platform marketplace, memiliki username seperti bot (misalnya, kata atau nama acak dengan banyak angka), dan memberikan harga yang sangat rendah. Usahakan selalu gunakan platform resmi untuk pembayaran yang lebih aman!</span>" 
+                id: "Kamu bisa membelinya di website resmi, marketplace (kami menyertakan link untuk hampir semua e-reader!), Carousell, dan Facebook Marketplace untuk perangkat bekas (secondhand), atau penjual di Instagram terpercaya yang menawarkan jasa titip beli.<br><span class=\"text-basil font-medium block mt-1\"><strong>Hati-hati penipuan!</strong> Penipu biasanya menolak untuk melakukan transaksi melalui platform marketplace, memiliki username seperti bot (e.g., kata atau nama random dengan banyak angka), dan memberikan harga yang sangat rendah. Usahakan selalu gunakan platform resmi untuk pembayaran yang lebih aman!</span>" 
             },
             faq3Q: { en: "Is a screen protector important?", id: "Apakah anti gores / screen protector penting?" },
-            faq3A: { en: "A flip cover is mostly fine. However, if you are clumsy and feel like you need extra protection, you can use it. Note that it might decrease touch sensitivity and could end up bubbly if applied wrong.", id: "Flip cover / case lipat biasanya sudah cukup. Tapi kalau kamu ceroboh dan butuh perlindungan ekstra, silakan pakai. Catatan: anti gores bisa mengurangi sensitivitas sentuhan dan bisa menggelembung kalau salah pasang." },
+            faq3A: { 
+                en: "A flip cover is mostly fine. However, if you are clumsy and feel like you need extra protection, you can use it. Note that it might decrease touch sensitivity and could end up bubbly if applied wrong.", 
+                id: "Flip cover biasanya sudah cukup. Namun, kalau kamu ceroboh dan butuh perlindungan ekstra, silakan pakai. Perlu diingat bahwa anti gores bisa mengurangi sensitivitas sentuhan dan bisa menggelembung kalau salah pasang." 
+            },
             faq4Q: { en: "What are ghost touches and dead pixels?", id: "Apa itu ghost touch dan dead pixel?" },
             faq4A: { 
                 en: "<strong>Ghost touch</strong> is when the screen reacts as if touched even when you aren't touching it. <em>(Note: Magnetic cases might be the cause of ghost touch, especially in more compact sized e-readers!)</em><br><br><strong>Dead pixel</strong> is a permanently black or white dot on the screen. Some secondhand devices might have either of these, so be sure to check carefully when buying!", 
                 id: "<strong>Ghost touch</strong> adalah ketika layar bereaksi seolah-olah disentuh meskipun kamu tidak menyentuhnya. <em>(Catatan: Casing magnetik bisa menjadi salah satu penyebab ghost touch, khususnya di e-reader dengan ukuran yang lebih compact!)</em><br><br><strong>Dead pixel</strong> adalah titik hitam atau putih permanen di layar. Beberapa perangkat bekas mungkin memiliki cacat ini, jadi pastikan cek dengan teliti saat membeli!" 
             },
             faq5Q: { en: "What's the difference between 'with ads' and 'no ads' in Kindle?", id: "Apa bedanya Kindle 'with ads' dan 'no ads'?" },
-            faq5A: { en: "Kindles 'with ads' show advertisements on the lock screen when the device is asleep. To remove this, you can buy the Signature Edition / Kids Edition / 'No Ads' option. If you already bought the 'with ads' version, you can pay to remove it via Amazon, or in some cases, their customer service might do it for free if you ask nicely.", id: "Kindle 'with ads' menampilkan iklan di layar kunci saat sedang tidur (sleep). Untuk menghilangkannya, kamu bisa beli Signature Edition / Kids Edition / opsi 'No Ads'. Kalau sudah telanjur beli yang ada iklannya, kamu bisa bayar ke Amazon untuk menghapusnya, atau kadang customer service mereka mau menghapusnya secara gratis kalau kamu minta baik-baik." },
+            faq5A: { 
+                en: "Kindles 'with ads' show advertisements on the lock screen when the device is in sleep mode. To remove this, you can buy the Signature Edition / Kids Edition / 'No Ads' option. If you already bought the 'with ads' version, you can pay to remove it via Amazon, or in some cases, their customer service might do it for free if you ask nicely.", 
+                id: "Kindle 'with ads' menampilkan iklan di layar kunci saat sedang tidur (sleep). Untuk menghilangkannya, kamu bisa beli Signature Edition / Kids Edition / opsi 'No Ads'. Kalau sudah telanjur beli yang ada iklannya, kamu bisa bayar ke Amazon untuk menghapusnya, atau kadang customer service mereka mau menghapusnya secara gratis kalau kamu minta baik-baik." 
+            },
             faq6Q: { en: "Can I still use Libby on Kindle?", id: "Apakah saya masih bisa pakai Libby di Kindle?" },
-            faq6A: { en: "Libraries that allow 'Send to Kindle' are mostly US libraries. If you have access to those, you're all good! If you use Kobo, you can borrow directly from Libby natively, but you can only log into 1 library card at a time.", id: "Perpustakaan yang mendukung opsi 'Send to Kindle' sebagian besar adalah perpustakaan AS. Kalau kamu punya akses ke sana, aman! Kalau kamu pakai Kobo, kamu bisa pinjam langsung dari Libby, tapi hanya bisa login 1 kartu perpustakaan dalam satu waktu." },
-            faq7Q: { en: "What is a Jailbreak and why do people do it?", id: "Apa itu Jailbreak dan kenapa orang melakukannya?" },
-            faq7A: { en: "Jailbreaking is a software modification that removes manufacturer restrictions. <strong>For Amazon Kindles</strong>, users jailbreak to break out of the Amazon ecosystem—allowing them to read books in EPUB formats outside the Kindle app, customize screensavers, or block forced updates. <em>(Note: Amazon actively tries to block jailbreaking, especially on newer devices).</em><br><br><strong>For Kobo devices</strong>, the ecosystem is already open, so users don't technically 'jailbreak' them. Instead, they install other community-made tools simply to get more advanced formatting options, better PDF support, or complex reading statistics.", id: "Jailbreaking adalah modifikasi software untuk menghapus batasan dari produsen. <strong>Untuk Amazon Kindle</strong>, pengguna melakukan jailbreak agar bisa keluar dari ekosistem Amazon—sehingga bisa membaca format EPUB di luar aplikasi bawaan Kindle, mengubah screensaver, atau memblokir update paksa. <em>(Catatan: Amazon sangat aktif memblokir celah jailbreak, terutama di perangkat baru).</em><br><br><strong>Untuk perangkat Kobo</strong>, ekosistemnya sudah terbuka, jadi secara teknis tidak butuh 'jailbreak'. Pengguna Kobo biasanya menginstal alat buatan komunitas tambahan hanya untuk mendapatkan fitur formatting tingkat lanjut, dukungan PDF yang lebih baik, atau statistik baca yang detail." },
+            faq6A: { 
+                en: "Yes! Do note that libraries that allow 'Send to Kindle' are mostly US libraries. If you have access to those, you're all good! You can use multiple libraries as well as long as they allow the send to Kindle option. If you use Kobo, you can borrow directly from Libby/Overdrive natively, but you can only log 1 library card at a time. If you use android-based e-readers, you can read directly from the Libby app.", 
+                id: "Ya! Namun, perlu dicatat bahwa perpustakaan yang mendukung opsi 'Send to Kindle' sebagian besar adalah perpustakaan USA. Kalau kamu sudah berlangganan atau memakai punya temanmu dari sana, aman! Kamu juga bisa memakai lebih dari satu perpustakaan selama opsi tersebut ada. Kalau kamu pakai Kobo, kamu bisa pinjam langsung dari Libby/Overdrive natively, tetapi hanya bisa login 1 kartu perpustakaan dalam satu waktu. Kalau kamu menggunakan e-reader berbasis Android, kamu bisa membaca melalui aplikasi Libby secara langsung." 
+            },
+            faq7Q: { en: "What is a Jailbreak and why do people do it?", id: "Apa itu Jailbreak?" },
+            faq7A: { 
+                en: "Jailbreaking is a software modification that removes manufacturer restrictions. For Amazon Kindles, users jailbreak to break out of the Amazon ecosystem, allowing them to read books in EPUB formats outside the Kindle app, customize screensavers, or block forced updates. Users with older devices (pre-2012) also did this so they can use their device after the discontinued support. (Note: Amazon actively tries to block jailbreaking, especially on newer devices)<br><br>For Kobo devices, users don't technically 'jailbreak' them but instead, they install other community-made tools simply to get more advanced formatting options, better PDF support, or complex reading statistics.", 
+                id: "Jailbreaking adalah modifikasi software untuk menghapus batasan dari manufaktur. Untuk Kindle, pengguna melakukan jailbreak agar bisa keluar dari ekosistem Amazon sehingga bisa membaca format EPUB di luar aplikasi bawaan Kindle, mengubah screensaver, atau memblokir forced update. (Catatan: Amazon sedag aktif memblokir celah jailbreak, terutama di perangkat baru).<br><br>Untuk Kobo, pengguna tidak melakukan jailbreak secara teknis, tetapi untuk menginstal tool tambahan agar mendapatkan fitur formatting tingkat lanjut, dukungan PDF yang lebih baik, atau statistik baca yang detail." 
+            },
             faq8Q: { en: "Why are Android-based devices usually more expensive?", id: "Kenapa e-reader berbasis Android biasanya lebih mahal?" },
             faq8A: { en: "Android e-readers run a full operating system, allowing you to install apps directly from the Google Play Store (so you can have Kindle, Kobo, and local library apps all on one device). Some even offer interchangeable color/B&W modes and faster refresh rates. However, running an entire OS and multiple apps significantly drains the battery faster than a standard e-reader.", id: "E-reader Android menjalankan sistem operasi penuh, memungkinkanmu mengunduh aplikasi dari Google Play Store (jadi kamu bisa punya aplikasi Kindle, Kobo, dan iPusnas sekaligus dalam satu perangkat). Beberapa juga menawarkan mode warna/B&W yang bisa diubah dan refresh rate cepat. Namun, menjalankan OS penuh dan banyak aplikasi membuat baterainya jauh lebih cepat habis dibandingkan e-reader biasa." },
             
@@ -177,8 +207,8 @@
             { id: "d_12", name: "Kobo Clara Colour", image: "https://m.media-amazon.com/images/I/71WXIbM44gL.jpg", priceRange: "Rp2.600.000 - Rp3.800.000", buyLink: "https://s.shopee.co.id/2LWOcgdTnv", specs: { ecosystem: "kobo", android: false, color: true, buttons: false, waterproof: true, warmLight: true, size: "compact", battery: "short", libby: "one", wirelessCharging: false, stylus: false, storage: "16GB", budget: 3, age: "new" } },
             { id: "d_13", name: "Kobo Libra Colour", image: "https://www.pbtech.co.nz/imgprod/T/A/TABKOB42802.jpg?h=510259536", priceRange: "Rp4.000.000 - Rp5.200.000", buyLink: "https://s.shopee.co.id/6L2XO6EaqB", specs: { ecosystem: "kobo", android: false, color: true, buttons: true, waterproof: true, warmLight: true, size: "bigger", battery: "short", libby: "one", wirelessCharging: false, stylus: true, storage: "32GB", budget: 3, extra: "Google Drive & Dropbox integration", age: "new" } },
             { id: "d_14", name: "BOOX Go 6 (Gen 2)", image: "https://euroshop.boox.com/cdn/shop/files/20260608-180657.jpg?v=1780913629", priceRange: "Rp2.500.000 - Rp3.000.000", buyLink: "https://s.shopee.co.id/3B5VcNxpo7", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: true, storage: "32GB", budget: 3, age: "new" } },
-            { id: "d_15", name: "BOOX Go 7 Color", image: "https://m.media-amazon.com/images/I/61eag2NcnAL.jpg", priceRange: "Rp4.500.000 - Rp5.700.000", buyLink: "https://s.shopee.co.id/1qa8228sFN", specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "64GB", budget: 3, age: "new" } },
-            { id: "d_16", name: "BOOX Go 7 BW", image: "https://img.myshopline.com/image/store/1669199018402/03-5.jpeg?w=1000&h=1000", priceRange: "Rp4.000.000 - Rp4.700.000", buyLink: "https://s.shopee.co.id/9pcPYkw1ey", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "64GB", budget: 3, age: "new" } },
+            { id: "d_15", name: "BOOX Go 7 Color", image: "https://m.media-amazon.com/images/I/61eag2NcnAL.jpg", priceRange: "Rp4.500.000 - Rp5.700.000", buyLink: "https://s.shopee.co.id/1qa8228sFN", specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: true, storage: "64GB", budget: 3, age: "new" } },
+            { id: "d_16", name: "BOOX Go 7 BW", image: "https://img.myshopline.com/image/store/1669199018402/03-5.jpeg?w=1000&h=1000", priceRange: "Rp4.000.000 - Rp4.700.000", buyLink: "https://s.shopee.co.id/9pcPYkw1ey", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: true, storage: "64GB", budget: 3, age: "new" } },
             { id: "d_17", name: "BOOX Poke 5", image: "https://sc04.alicdn.com/kf/H285d0f1819c0469595b280c04eee28e85.jpg", priceRange: "Rp2.000.000 - Rp3.000.000", buyLink: "undefined", specs: { ecosystem: "android", android: true, color: false, buttons: false, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB", budget: 2, age: "mid" } },
             { id: "d_18", name: "BOOX Poke 4 Lite", image: "https://shop.boox.com/cdn/shop/products/1_73786023-d98b-47ba-821f-ee0b618bc69a.jpg?v=1665209995", priceRange: "Rp1.500.000 - Rp2.400.000", buyLink: "undefined", specs: { ecosystem: "android", android: true, color: false, buttons: false, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "16GB", budget: 1, age: "old" } },
             { id: "d_19", name: "Meebook M6C", image: "https://i.ebayimg.com/images/g/oOMAAOSwTe1mer0x/s-l1200.png", priceRange: "Rp2.000.000 - Rp3.000.000", buyLink: "https://s.shopee.co.id/LlKFddJYR", specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB", budget: 2, age: "new" } },
@@ -187,7 +217,10 @@
             { id: "d_22", name: "Bigme B6 BW", image: "https://m.media-amazon.com/images/I/61RXFMyTzQL.jpg", priceRange: "Rp2.000.000 - Rp3.300.000", buyLink: "https://s.shopee.co.id/5q6GnvaY8v", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB, 64GB", budget: 3, age: "mid" } },
             { id: "d_23", name: "Bigme B6 Color", image: "https://m.media-amazon.com/images/I/618R7hBZ5bL.jpg", priceRange: "Rp2.800.000 - Rp3.300.000", buyLink: "https://s.shopee.co.id/5q6GnvaY8v", specs: { ecosystem: "android", android: true, color: true, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB, 64GB", budget: 3, age: "mid" } },
             { id: "d_24", name: "BOOX Leaf2", image: "https://images.71media.pl/566/maxi/onyx-boox-leaf-2-black-front.jpg", priceRange: "Rp2.500.000 - Rp3.500.000", buyLink: "undefined", specs: { ecosystem: "android", android: true, color: false, buttons: true, waterproof: false, warmLight: true, size: "bigger", battery: "short", libby: "none (app)", wirelessCharging: false, stylus: false, storage: "32GB", budget: 2, age: "old" } },
-            { id: "d_25", name: "Kindle Paperwhite 7th Gen", image: "https://m.media-amazon.com/images/I/61shyF063PL._AC_UF894,1000_QL80_.jpg", priceRange: "Rp700.000 - Rp1.500.000", buyLink: "undefined", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: false, warmLight: false, size: "compact", battery: "mid", libby: "multiple", wirelessCharging: false, stylus: false, storage: "4GB", budget: 1, age: "old" } }
+            { id: "d_25", name: "Kindle Paperwhite 7th Gen", image: "https://m.media-amazon.com/images/I/61shyF063PL._AC_UF894,1000_QL80_.jpg", priceRange: "Rp700.000 - Rp1.500.000", buyLink: "undefined", specs: { ecosystem: "amazon", android: false, color: false, buttons: false, waterproof: false, warmLight: false, size: "compact", battery: "mid", libby: "multiple", wirelessCharging: false, stylus: false, storage: "4GB", budget: 1, age: "old" } },
+            { id: "d_26", name: "Xteink X3", image: "https://www.xteink.com/cdn/shop/files/3_23c30e7f-e418-4f98-b591-4605ebd516a6.jpg?v=1782381175&width=1946", priceRange: "Rp1.000.000 - Rp1.500.000", buyLink: "https://s.shopee.co.id/AKZ4vu6Tiq", specs: { ecosystem: "other", android: false, color: false, buttons: true, waterproof: false, warmLight: false, size: "compact", battery: "mid", libby: "none", wirelessCharging: false, stylus: false, storage: "16GB", budget: 1, age: "new", extra: "No backlight, controlled entirely using physical buttons (not touch screen), storage is expandable up to 256 GB with microSD card" } },
+            { id: "d_27", name: "Xteink X4", image: "https://www.xteink.com/cdn/shop/files/9751757520181_.pic_hd_f31be8a1-743f-44c7-a1d6-6eb30e155189.jpg?v=1782381257&width=1946", priceRange: "Rp1.000.000 - Rp1.500.000", buyLink: "https://s.shopee.co.id/AKZ4vu6Tiq", specs: { ecosystem: "other", android: false, color: false, buttons: true, waterproof: false, warmLight: false, size: "compact", battery: "mid", libby: "none", wirelessCharging: false, stylus: false, storage: "16GB", budget: 1, age: "new", extra: "No backlight, controlled entirely using physical buttons (not touch screen), storage is expandable up to 256 GB with microSD card" } },
+            { id: "d_28", name: "Xteink X4 Pro", image: "https://blog.the-ebook-reader.com/wp-content/uploads/2026/07/Xteink-X4-Pro.jpg", priceRange: "Rp1.400.000 - Rp1.600.000", buyLink: "undefined", specs: { ecosystem: "other", android: false, color: false, buttons: true, waterproof: false, warmLight: true, size: "compact", battery: "mid", libby: "none", wirelessCharging: false, stylus: false, storage: "16GB", budget: 1, age: "new", extra: "Storage is expandable up to 256 GB with microSD card" } }
         ];
 
         const needQuestions = [
@@ -220,10 +253,10 @@
 
         const questions = [
             { id: 'source', q: { en: 'Where do most of your books come from?', id: 'Dari mana kebanyakan sumber bukumu?' }, options: [ { label: { en: 'Amazon Kindle Store', id: 'Toko Amazon Kindle' }, value: 'amazon' }, { label: { en: 'Kobo Store', id: 'Toko Kobo' }, value: 'kobo' }, { label: { en: 'Indonesian local apps', id: 'Aplikasi lokal Indonesia' }, value: 'android' }, { label: { en: 'Libby / Overdrive', id: 'Libby / Overdrive' }, value: 'libby' }, { label: { en: 'EPUB/PDF files (Sideload)', id: 'File EPUB/PDF (Sideload)' }, value: 'sideload' }, { label: { en: 'Mixed sources', id: 'Campuran' }, value: 'mixed' } ] },
-            { id: 'content', q: { en: 'What will you mostly read?', id: 'Apa yang paling sering kamu baca?' }, options: [ { label: { en: 'Novels', id: 'Novel' }, value: 'text' }, { label: { en: 'Manga / Comics / Graphic Novels', id: 'Manga / Komik / Novel Grafis' }, value: 'manga_comic' }, { label: { en: 'Textbooks', id: 'Buku Pelajaran' }, value: 'pdf' }, { label: { en: 'Mixed', id: 'Campuran' }, value: 'mixed' } ] },
+            { id: 'content', q: { en: 'What will you mostly read?', id: 'Apa yang paling sering kamu baca?' }, options: [ { label: { en: 'Novels', id: 'Novel' }, value: 'text' }, { label: { en: 'Manga / Comics / Graphic Novels', id: 'Manga / Komik / Novel Grafis' }, value: 'manga_comic' }, { label: { en: 'Textbooks / Journals', id: 'Textbook / Journal' }, value: 'pdf' }, { label: { en: 'Mixed', id: 'Campuran' }, value: 'mixed' } ] },
             { id: 'reading_time', q: { en: 'How much time do you spend reading in a day?', id: 'Berapa lama waktu yang kamu habiskan untuk membaca dalam sehari?' }, options: [ { label: { en: 'Around 30 minutes', id: 'Sekitar 30 menit' }, value: 'short' }, { label: { en: '1 to 3 hours', id: '1 hingga 3 jam' }, value: 'mid' }, { label: { en: 'More than 3 hours!', id: 'Lebih dari 3 jam!' }, value: 'long' } ] },
             { id: 'waterproof', q: { en: 'How important is waterproofing?', id: 'Seberapa penting fitur <i>waterproof</i>?' }, options: [ { label: { en: 'Essential', id: 'Sangat penting' }, value: 'essential' }, { label: { en: 'Nice to have', id: 'Bagus kalau ada' }, value: 'nice' }, { label: { en: 'Do not care', id: 'Tidak peduli' }, value: 'none' } ] },
-            { id: 'size', q: { en: 'What size do you prefer?', id: 'Ukuran seperti apa yang kamu lebih suka?' }, options: [ { label: { en: 'Compact and lightweight', id: 'Ringkas dan ringan' }, value: 'compact' }, { label: { en: 'A more comfortable, book-like size', id: 'Lebih nyaman, mirip ukuran buku asli' }, value: 'bigger' } ] },
+            { id: 'size', q: { en: 'What size do you prefer?', id: 'Ukuran seperti apa yang kamu lebih suka?' }, options: [ { label: { en: 'Compact', id: 'Compact' }, value: 'compact' }, { label: { en: 'Book-like size', id: 'Seperti ukuran buku' }, value: 'bigger' } ] },
             { id: 'buttons', q: { en: 'Which sounds more comfortable?', id: 'Mana yang terdengar lebih nyaman?' }, options: [ { label: { en: 'Touchscreen', id: 'Layar sentuh' }, value: 'touch' }, { label: { en: 'Physical buttons', id: 'Tombol fisik' }, value: 'buttons' }, { label: { en: 'Either', id: 'Keduanya' }, value: 'either' } ] },
             { id: 'sync', q: { en: 'Would you like your reading progress to sync across other devices (phone, tablet)?', id: 'Apakah kamu ingin progres bacamu sinkron di perangkat lain (HP, tablet)?' }, options: [ { label: { en: 'Yes, I will be reading on my other devices', id: 'Ya, saya akan membaca di perangkat lain juga' }, value: 'yes' }, { label: { en: 'No, I will only read from this device', id: 'Tidak, saya hanya akan membaca dari perangkat ini' }, value: 'no' } ] },
             { id: 'library', q: { en: 'Do you use digital public libraries (like Libby)?', id: 'Apakah kamu menggunakan perpustakaan publik digital (seperti Libby)?' }, options: [ { label: { en: 'No, I don\'t', id: 'Tidak' }, value: 'never' }, { label: { en: 'Yes, only one library', id: 'Ya, hanya satu perpustakaan' }, value: 'one' }, { label: { en: 'Yes, multiple libraries', id: 'Ya, banyak perpustakaan' }, value: 'multiple' } ] },
@@ -352,7 +385,7 @@
 
             const footerHtml = `
                 <div class="absolute bottom-4 left-0 right-0 text-center z-10 flex flex-col items-center pointer-events-none">
-                    <span class="text-xs font-medium text-strawberry pointer-events-auto"><span class="font-sunshiney text-base mr-1">made by</span> @fictionalfira</span>
+                    <span class="text-xs font-medium text-strawberry pointer-events-auto"><span class="font-sunshiney text-xl mr-1">made by fiwwa</span></span>
                     
                     <a href="https://www.instagram.com/fictionalfira" target="_blank" class="flex items-center gap-1.5 text-xs text-strawberry hover:text-strawberry/80 transition-colors mt-1 pointer-events-auto">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -1037,7 +1070,7 @@
                         </div>
 
                         <div class="flex flex-col space-y-2 text-left">
-                            <label class="font-semibold text-basil">${t({en: 'Your Name', id: 'Nama Kamu'})}</label>
+                            <label class="font-semibold text-basil">${t({en: 'Your Name', id: 'Nama'})}</label>
                             <input type="text" name="name" required value="${state.name}" class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full">
                         </div>
 
@@ -1073,7 +1106,7 @@
                         </div>
 
                         <div class="flex flex-col space-y-2 text-left">
-                            <label class="font-semibold text-basil">${t({en: 'Your Name', id: 'Nama Kamu'})}</label>
+                            <label class="font-semibold text-basil">${t({en: 'Your Name', id: 'Nama'})}</label>
                             <input type="text" name="name" required value="${state.name}" class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full">
                         </div>
 
@@ -1100,14 +1133,14 @@
                     <div class="shrink-0 mb-6 text-center">
                         <h2 class="font-sunshiney text-4xl sm:text-5xl text-basil mb-3">${t({en: 'E-reader Survey', id: 'Survei E-reader'})}</h2>
                         <p class="text-basil/80 text-sm max-w-2xl mx-auto">
-                            ${t({en: "Thank you for helping us improve! If you own or have used more than one e-reader model, you are welcome to submit a separate response for each device. We'd love to hear about it ;)", id: "Terima kasih telah membantu kami! Jika kamu memiliki atau pernah menggunakan lebih dari satu model e-reader, kamu boleh mengirimkan tanggapan terpisah untuk setiap perangkat. Kami sangat ingin mendengarnya ;)"})}
+                            ${t({en: "Thank you for helping us improve! If you own or have used more than one e-reader model, you are welcome to submit a separate response for each device. We'd love to hear about it ;)", id: "Terima kasih telah membantu kami berkembang! Jika kamu memiliki atau pernah menggunakan lebih dari satu model e-reader, kamu boleh mengirimkan respons terpisah untuk setiap perangkat ;)"})}
                         </p>
                     </div>
 
                     <form onsubmit="handleSurveySubmit(event)" class="space-y-6 max-w-2xl mx-auto w-full bg-duckegg/10 p-6 sm:p-8 rounded-[2rem] border-2 border-duckegg shadow-sm">
                         
                         <div class="flex flex-col space-y-2 text-left">
-                            <label class="font-semibold text-basil">${t({en: 'Your Name', id: 'Nama Kamu'})}</label>
+                            <label class="font-semibold text-basil">${t({en: 'Your Name', id: 'Nama'})}</label>
                             <input type="text" name="name" required class="font-normal border-2 border-duckegg rounded-xl p-3 focus:ring-4 focus:ring-hydrangea/40 outline-none text-basil bg-white w-full">
                         </div>
 
@@ -1460,6 +1493,7 @@
                         <ul class="text-sm text-basil space-y-1">
                             ${pros.map(p => `<li class="flex"><span class="text-basil font-bold mr-2">+</span> ${p}</li>`).join('')}
                         </ul>
+                        ${device.specs.extra ? `<p class="mt-2 text-xs text-basil font-medium italic border-t border-lightgreen/30 pt-2">${device.specs.extra}</p>` : ''}
                     </div>
                     <div class="bg-strawberry/10 p-4 rounded-2xl">
                         <h4 class="font-bold text-basil uppercase text-xs mb-2 tracking-widest">Keep in mind</h4>
